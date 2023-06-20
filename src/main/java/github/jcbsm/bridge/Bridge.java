@@ -65,11 +65,8 @@ public class Bridge extends JavaPlugin {
      * Displays a termination message to notify user the plugin did not load correctly.
      */
     private void displayTerminationMessage() {
-        System.out.println("Terminating process...");
         System.out.println("The plugin has not loaded correctly.");
         System.out.println("============ Discord Bridge out! ============");
-        System.out.println();
-        System.out.println();
     }
 
     /**
