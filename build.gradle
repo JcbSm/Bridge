@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+group 'github.jcbsm'
+version '0.0_alpha'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven {
+        name 'm2-dv8tion'
+        url 'https://m2.dv8tion.net/releases'
+    }
+}
+
+dependencies {
+    implementation ('net.dv8tion:JDA:4.4.1_353') {
+        exclude module: 'opus-java'
+    }
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
+}
+
+jar {
+    manifest {
+        attributes
+    }
+}
+
+shadowJar {
+    archiveClassifier = ''
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.register('jarIntoServer') {
+    group 'build'
+    dependsOn 'shadowJar'
+    doLast {
+        copy {
+            from 'build/libs/' + rootProject.name + '-' + project.version + '.jar'
+            into 'testsrv/plugins'
+        }
+    }
+}
+

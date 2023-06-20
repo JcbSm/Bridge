@@ -1,0 +1,7 @@
+main: github.jcbsm.bridge.Bridge
+name: Bridge
+description: Bridge between minecraft and your discord server!
+version: 1.0.0
+api-version: 1.19
+author: JcbSm
+load: STARTUP

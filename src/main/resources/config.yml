@@ -1,0 +1,8 @@
+# Discord Bot Token
+# From your application at discord.com/developers
+token: BOT_TOKEN_HERE
+
+# Channel IDs
+channels:
+  chat: 0
+  console: 0
