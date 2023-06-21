@@ -1,13 +1,13 @@
 package github.jcbsm.bridge;
 
 
-import github.jcbsm.bridge.discord.InteractionHandler;
-import github.jcbsm.bridge.discord.commands.PingCommand;
+import github.jcbsm.bridge.discord.ApplicationCommandHandler;
+import github.jcbsm.bridge.discord.commands.PlayerListCommand;
 import github.jcbsm.bridge.exceptions.InvalidConfigException;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import javax.security.auth.login.LoginException;
 
@@ -16,7 +16,7 @@ public class BridgeDiscordClient {
     private JDA jda;
     private Guild guild;
     private TextChannel chat, console;
-    private InteractionHandler interactionHandler;
+    private ApplicationCommandHandler applicationCommandHandler;
 
     public BridgeDiscordClient(String token, String chatChannelID, String consoleChannelID) throws LoginException, InvalidConfigException, InterruptedException {
 
@@ -31,9 +31,9 @@ public class BridgeDiscordClient {
         guild = chat.getGuild();
 
         System.out.println("Registering Application commands");
-        interactionHandler = new InteractionHandler(
+        applicationCommandHandler = new ApplicationCommandHandler(
                 this,
-                new PingCommand()
+                new PlayerListCommand()
         );
 
     }
