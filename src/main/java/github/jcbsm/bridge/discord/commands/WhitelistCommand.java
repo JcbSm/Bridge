@@ -2,6 +2,7 @@ package github.jcbsm.bridge.discord.commands;
 
 import github.jcbsm.bridge.Bridge;
 import github.jcbsm.bridge.discord.ApplicationCommand;
+import github.jcbsm.bridge.util.Mojang;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -11,6 +12,7 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.IOException;
 import java.util.UUID;
 
 public class WhitelistCommand extends ApplicationCommand {
@@ -36,21 +38,28 @@ public class WhitelistCommand extends ApplicationCommand {
             return;
         }
 
-        // Get usernames
-        String username = option.getAsString();
-        String current = Bridge.getPlugin().getDB().getCurrentUsername(userId);
+        // Wait
+        event.deferReply().setEphemeral(true).queue();
 
-        if (username.equals(current)) {
-            event.reply("Nothing has changed...").setEphemeral(true).queue();
+        // Get usernames & uuid
+        String username = option.getAsString();
+        UUID uuid = Mojang.getUserUUID(username);
+
+        if (uuid == null) {
+            event.getHook().sendMessage("No user exists").queue();
             return;
         }
 
-        // Send console commands
-        Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "whitelist add " + username);
-        Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "whitelist remove " + current);
+        System.out.println("User " + event.getUser().getGlobalName() + " executed /whitelist from Discord.");
 
-        // Update database
-        Bridge.getPlugin().getDB().setUsername(userId, username);
+        // Add name to whitelist
+        Bukkit.getScheduler().runTask(Bridge.getPlugin(), () -> Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "whitelist add " + username));
+
+        //////////////////////////////////////////////////////
+        // LOGIC TO REMOVE OLD NAME FROM WHITELIST!!!!!!!!!!!!
+        //////////////////////////////////////////////////////
+
+        event.getHook().sendMessage("```Added: " + username + "\nRemoved: ______```").queue();
 
     }
 }
