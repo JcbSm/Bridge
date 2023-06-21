@@ -1,5 +1,6 @@
 package github.jcbsm.bridge;
 
+import github.jcbsm.bridge.database.IDatabaseClient;
 import github.jcbsm.bridge.listeners.PlayerChatEventListener;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -7,9 +8,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Bridge extends JavaPlugin {
 
     /**
-     * Plugin variables
+     * Plugin variables, clients, util etc
      */
     private BridgeDiscordClient discord;
+    private IDatabaseClient db;
     private FileConfiguration config = this.getConfig();
 
     /**
@@ -53,6 +55,9 @@ public class Bridge extends JavaPlugin {
             return;
         }
 
+        // Create db
+
+
         // Register event listeners
         System.out.println("Registering Listeners...");
         getServer().getPluginManager().registerEvents(new PlayerChatEventListener(), this);
@@ -91,6 +96,12 @@ public class Bridge extends JavaPlugin {
     public static Bridge getPlugin() {
         return getPlugin(Bridge.class);
     }
+
+    /**
+     * Get the database
+     * @return
+     */
+    public IDatabaseClient getDB() { return db; }
 
     /**
      * Processes a chat message

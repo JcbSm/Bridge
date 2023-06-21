@@ -27,7 +27,7 @@ public class ApplicationCommandHandler {
      */
     public void registerApplicationCommand(ApplicationCommand command) {
         // Register command
-        client.getGuild().upsertCommand(Commands.slash(command.getName(), command.getDescription())).queue();
+        client.getGuild().upsertCommand(command.getCommandData()).queue();
         // Handle listener
         client.getJDA().addEventListener(command);
     }

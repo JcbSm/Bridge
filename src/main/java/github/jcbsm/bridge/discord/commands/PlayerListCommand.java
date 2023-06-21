@@ -2,6 +2,8 @@ package github.jcbsm.bridge.discord.commands;
 
 import github.jcbsm.bridge.discord.ApplicationCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -39,5 +41,10 @@ public class PlayerListCommand extends ApplicationCommand {
 
         }
 
+    }
+
+    @Override
+    public CommandData getCommandData() {
+        return Commands.slash(getName(), getDescription());
     }
 }

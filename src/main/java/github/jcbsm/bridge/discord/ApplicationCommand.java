@@ -2,6 +2,7 @@ package github.jcbsm.bridge.discord;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 /**
  * Abstract class for Application Commands
@@ -56,5 +57,11 @@ public abstract class ApplicationCommand extends ListenerAdapter {
      * @param event Event
      */
     public abstract void run(SlashCommandInteractionEvent event);
+
+    /**
+     * Get the CommandData
+     * @return CommandData
+     */
+    public abstract CommandData getCommandData();
 
 }
