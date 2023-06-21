@@ -16,6 +16,7 @@ public class InteractionHandler {
 
         this.client = client;
 
+        // For each command, register it
         for (ApplicationCommand command : commands) {
             registerApplicationCommand(command);
         }
