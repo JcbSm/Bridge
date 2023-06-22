@@ -57,7 +57,6 @@ public class Bridge extends JavaPlugin {
 
         // Create db
 
-
         // Register event listeners
         System.out.println("Registering Listeners...");
         getServer().getPluginManager().registerEvents(new PlayerChatEventListener(), this);

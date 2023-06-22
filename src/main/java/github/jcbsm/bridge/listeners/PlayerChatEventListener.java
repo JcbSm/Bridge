@@ -16,7 +16,6 @@ public class PlayerChatEventListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
 
-        // (No idea why this works)
         Bukkit.getScheduler().runTaskAsynchronously(Bridge.getPlugin(), () ->
                 Bridge.getPlugin().processChatMessage(
                         event.getPlayer().getName(),
