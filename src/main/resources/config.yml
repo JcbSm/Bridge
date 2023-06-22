@@ -1,8 +1,56 @@
 # Discord Bot Token
 # From your application at discord.com/developers
-token: BOT_TOKEN_HERE
+BotToken: "BOT_TOKEN_HERE"
 
 # Channel IDs
-channels:
-  chat: 0
-  console: 0
+Channels:
+  Chat: "000000000000000000"
+  Console: "000000000000000000"
+
+# Messages Formatting
+MessageFormat:
+
+  # Discord -> Minecraft
+  DiscordToMinecraft:
+
+    # Chat - A Message sent into the Discord 'Chat' channel.
+    # Available placeholders:
+    #   %name%      Discord users display name
+    #   %username%  Discord users username
+    #   %message%   The message content
+    #   %channel%   The channel the message was sent from
+    Chat: "[Discord] %USERNAME% > %MESSAGE%"
+
+  # Minecraft -> Discord
+  # Available placeholders
+  #   %name%:         display name from things like nicknames
+  #   %username%:            raw player username
+  minecraftToDiscord:
+
+    # Chat - A message sent into the Minecraft chat by a player.
+    # Available placeholders:
+    #   %message%   The message content
+    #   %world%     The world the message was sent from
+    Chat: "**%username% >** %message%"
+
+    # Death - A player death
+    # Available placeholders:
+    #   %message%   The death message (includes username)
+    #   %world%     The world the player died in
+    Death: "## ***%message%***"
+
+    # Join - A player joining the server
+    # Available placeholders:
+    #   %message%   The join message
+    Join: "# *%username% joined the server*"
+
+    # Leave - A player leaving the server
+    # Available placeholders:
+    #   %message%   The leave message
+    Leave: "# *%username% left the server*"
+
+    # Achievement - A player earning an achievement
+    # Available placeholders:
+    #   %title%         The achievement title
+    #   %description%   The achievement description
+    Achievement: "## *:trophy: %username% earned an achievement!* \n**%title%** \n> %description%"
