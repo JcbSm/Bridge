@@ -82,9 +82,9 @@ public class Bridge extends JavaPlugin {
         saveDefaultConfig();
 
         // Define variables
-        token = config.getString("token");
-        chatChannelID = config.getString("channels.chat");
-        consoleChannelID = config.getString("channels.console");
+        token = config.getString("BotToken");
+        chatChannelID = config.getString("Channels.Chat");
+        consoleChannelID = config.getString("Channels.Console");
 
     }
 
