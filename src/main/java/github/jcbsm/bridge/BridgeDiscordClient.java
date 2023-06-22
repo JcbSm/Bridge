@@ -5,10 +5,12 @@ import github.jcbsm.bridge.discord.ApplicationCommandHandler;
 import github.jcbsm.bridge.discord.commands.PlayerListCommand;
 import github.jcbsm.bridge.discord.commands.WhitelistCommand;
 import github.jcbsm.bridge.exceptions.InvalidConfigException;
+import github.jcbsm.bridge.listeners.DiscordChatEventListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import javax.security.auth.login.LoginException;
 
@@ -22,7 +24,13 @@ public class BridgeDiscordClient {
     public BridgeDiscordClient(String token, String chatChannelID, String consoleChannelID) throws LoginException, InvalidConfigException, InterruptedException {
 
         System.out.println("Attempting log in...");
-        jda = JDABuilder.createDefault(token).build();
+        jda = JDABuilder.createDefault(token,
+                    GatewayIntent.MESSAGE_CONTENT,
+                    GatewayIntent.GUILD_MESSAGES,
+                    GatewayIntent.GUILD_MEMBERS
+                )
+                .addEventListeners(new DiscordChatEventListener())
+                .build();
 
         // Wait for the client to log in properly
         jda.awaitReady();
@@ -37,7 +45,6 @@ public class BridgeDiscordClient {
                 new PlayerListCommand(),
                 new WhitelistCommand()
         );
-
     }
 
     /**

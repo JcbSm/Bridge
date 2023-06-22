@@ -2,6 +2,9 @@ package github.jcbsm.bridge;
 
 import github.jcbsm.bridge.database.IDatabaseClient;
 import github.jcbsm.bridge.listeners.PlayerChatEventListener;
+import github.jcbsm.bridge.util.PlaceholderFormatter;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,7 +20,7 @@ public class Bridge extends JavaPlugin {
     /**
      * The default config variables.
      */
-    private final String defaultChanenlID = "0", defaultToken = "BOT_TOKEN_HERE";
+    private final String defaultChanenlID = "000000000000000000", defaultToken = "BOT_TOKEN_HERE";
     /**
      * Discord Bot token
      */
@@ -57,7 +60,7 @@ public class Bridge extends JavaPlugin {
 
         // Create db
 
-        // Register event listeners
+        // Register Bukkit event listeners
         System.out.println("Registering Listeners...");
         getServer().getPluginManager().registerEvents(new PlayerChatEventListener(), this);
 
@@ -102,6 +105,8 @@ public class Bridge extends JavaPlugin {
      */
     public IDatabaseClient getDB() { return db; }
 
+    public String getChatChannelID() { return chatChannelID; }
+
     /**
      * Processes a chat message
      * @param username Username
@@ -110,5 +115,12 @@ public class Bridge extends JavaPlugin {
     public void processChatMessage(String username, String message) {
         System.out.println("Sending to discord client...");
         discord.sendChatMessage(username, message);
+    }
+
+    public void processDiscordMessageReceivedEvent(MessageReceivedEvent e) {
+
+        String msg = PlaceholderFormatter.discordMessage(e);
+        Bukkit.getScheduler().runTaskAsynchronously(this, () -> Bukkit.getServer().broadcastMessage(msg));
+
     }
 }
