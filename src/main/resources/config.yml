@@ -35,7 +35,7 @@ ChatRelay:
       # Available placeholders:
       #   %message%   The message content
       #   %world%     The world the message was sent from
-      Chat: "**%username% >** %message%"
+      PlayerChat: "**%username% >** %message%"
 
       # Death - A player death
       # Available placeholders:
@@ -57,4 +57,4 @@ ChatRelay:
       # Available placeholders:
       #   %title%         The advancement title
       #   %description%   The advancement description
-      Advancement: "## *:trophy: %username% earned an advancement!* \n**%title%** \n> %description%"
+      PlayerAdvancement: "## *:trophy: %username% earned an advancement!* \n**%title%** \n> %description%"

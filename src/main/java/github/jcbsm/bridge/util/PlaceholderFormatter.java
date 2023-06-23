@@ -79,7 +79,7 @@ public class PlaceholderFormatter {
 
     public static String playerChat(AsyncPlayerChatEvent event) {
 
-        String str = config.getString("MinecraftToDiscord.Chat");
+        String str = config.getString("MinecraftToDiscord.PlayerChat");
 
         str = playerEventPlaceholders(str, event);
 
@@ -125,7 +125,7 @@ public class PlaceholderFormatter {
 
     public static String playerAdvancement(PlayerAdvancementDoneEvent event) {
 
-        String str = config.getString("MinecraftToDiscord.Advancement");
+        String str = config.getString("MinecraftToDiscord.PlayerAdvancement");
 
         str = playerEventPlaceholders(str, event);
         str = replaceAll(str, advancementTitle, event.getAdvancement().getKey().getKey());
