@@ -53,8 +53,8 @@ ChatRelay:
       #   %message%   The leave message
       PlayerLeave: "# *%username% left the server*"
 
-      # Achievement - A player earning an achievement
+      # Advancement - A player earning an advancement
       # Available placeholders:
-      #   %title%         The achievement title
-      #   %description%   The achievement description
-      Achievement: "## *:trophy: %username% earned an achievement!* \n**%title%** \n> %description%"
+      #   %title%         The advancement title
+      #   %description%   The advancement description
+      Advancement: "## *:trophy: %username% earned an advancement!* \n**%title%** \n> %description%"

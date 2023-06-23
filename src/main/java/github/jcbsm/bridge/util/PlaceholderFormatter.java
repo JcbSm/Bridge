@@ -5,8 +5,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.event.player.*;
 
 import java.security.cert.CertificateFactorySpi;
 import java.util.regex.Pattern;
@@ -22,8 +21,8 @@ public class PlaceholderFormatter {
         message = escapeRegex + "%message%",
         channel = escapeRegex + "%channel%",
         world = escapeRegex +"%world%",
-        achievementTitle = escapeRegex + "%title%",
-        achievementDescription = escapeRegex + "%description%";
+        advancementTitle = escapeRegex + "%title%",
+        advancementDescription = escapeRegex + "%description%";
 
     /**
      * Replaces all the occurences of 'regex' with 'replacement' in 'input'
@@ -86,6 +85,51 @@ public class PlaceholderFormatter {
 
         str = replaceAll(str, message, event.getMessage());
         str = replaceAll(str, world, event.getPlayer().getWorld().getName());
+
+        return str;
+    }
+
+    public static String playerJoin(PlayerJoinEvent event) {
+
+        String str = config.getString("MinecraftToDiscord.PlayerJoin");
+
+        str = playerEventPlaceholders(str, event);
+
+        str = replaceAll(str, message, event.getJoinMessage());
+        str = replaceAll(str, world, event.getPlayer().getWorld().getName());
+
+        return str;
+    }
+
+    public static String playerLeave(PlayerQuitEvent event) {
+
+        String str = config.getString("MinecraftToDiscord.PlayerLeave");
+
+        str = playerEventPlaceholders(str, event);
+        str = replaceAll(str, message, event.getQuitMessage());
+        str = replaceAll(str, world, event.getPlayer().getWorld().getName());
+
+        return str;
+    }
+
+    public static String playerKick(PlayerKickEvent event) {
+
+        String str = config.getString("MinecraftToDiscord.PlayerLeave");
+
+        str = playerEventPlaceholders(str, event);
+        str = replaceAll(str, message, event.getLeaveMessage());
+        str = replaceAll(str, world, event.getPlayer().getWorld().getName());
+
+        return str;
+    }
+
+    public static String playerAdvancement(PlayerAdvancementDoneEvent event) {
+
+        String str = config.getString("MinecraftToDiscord.Advancement");
+
+        str = playerEventPlaceholders(str, event);
+        str = replaceAll(str, advancementTitle, event.getAdvancement().getKey().getKey());
+        str = replaceAll(str, advancementDescription, event.getAdvancement().toString());
 
         return str;
     }
