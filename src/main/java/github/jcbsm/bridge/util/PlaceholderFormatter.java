@@ -2,13 +2,14 @@ package github.jcbsm.bridge.util;
 
 import github.jcbsm.bridge.Bridge;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.regex.Pattern;
 
 public class PlaceholderFormatter {
 
-    private final static FileConfiguration config = Bridge.getPlugin().getConfig();
+    private final static ConfigurationSection config = Bridge.getPlugin().getConfig().getConfigurationSection("ChatRelay.MessageFormat");
 
     private final static String
         escapeRegex = "(?<!\\\\)",
@@ -28,7 +29,7 @@ public class PlaceholderFormatter {
     public static String discordMessage(MessageReceivedEvent event) {
 
         // Get config string
-        String str = config.getString("MessageFormat.DiscordToMinecraft.Chat");
+        String str = config.getString("DiscordToMinecraft.Chat");
 
         // Replace all %username%s
         Pattern p = Pattern.compile(escapeRegex + username);

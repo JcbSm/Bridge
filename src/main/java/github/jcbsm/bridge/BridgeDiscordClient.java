@@ -24,13 +24,18 @@ public class BridgeDiscordClient {
     public BridgeDiscordClient(String token, String chatChannelID, String consoleChannelID) throws LoginException, InvalidConfigException, InterruptedException {
 
         System.out.println("Attempting log in...");
-        jda = JDABuilder.createDefault(token,
+        JDABuilder builder = JDABuilder.createDefault(token,
                     GatewayIntent.MESSAGE_CONTENT,
                     GatewayIntent.GUILD_MESSAGES,
                     GatewayIntent.GUILD_MEMBERS
-                )
-                .addEventListeners(new DiscordChatEventListener())
-                .build();
+                );
+
+        if (Bridge.getPlugin().getConfig().getBoolean("ChatRelay.Enabled")) {
+            System.out.println("Enabling Discord Chat Relay listeners...");
+            builder.addEventListeners(new DiscordChatEventListener());
+        }
+
+        jda = builder.build();
 
         // Wait for the client to log in properly
         jda.awaitReady();

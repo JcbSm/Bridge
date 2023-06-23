@@ -49,3 +49,25 @@ tasks.register('jarIntoServer') {
     }
 }
 
+tasks.register('runServer') {
+    group 'server'
+    doLast {
+        exec {
+            workingDir "${projectDir}/testsrv/"
+            commandLine 'java', '-jar', 'spigot-1.19.2.jar', '-nogui'
+        }
+    }
+}
+
+
+tasks.register('buildRunServer') {
+    group 'server'
+    dependsOn 'jarIntoServer'
+    doLast {
+        exec {
+            workingDir "${projectDir}/testsrv/"
+            commandLine 'java', '-jar', 'spigot-1.19.2.jar', '-nogui'
+        }
+    }
+}
+

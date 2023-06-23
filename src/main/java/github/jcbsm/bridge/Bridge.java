@@ -62,7 +62,11 @@ public class Bridge extends JavaPlugin {
 
         // Register Bukkit event listeners
         System.out.println("Registering Listeners...");
-        getServer().getPluginManager().registerEvents(new PlayerChatEventListener(), this);
+
+        if (config.getBoolean("ChatRelay.Enabled")) {
+            System.out.println("Enabling Minecraft Chat Relay Listeners...");
+            getServer().getPluginManager().registerEvents(new PlayerChatEventListener(), this);
+        }
 
         // End of enable stdout.
         System.out.println("========= Discord Bridge has loaded =========");
@@ -86,8 +90,8 @@ public class Bridge extends JavaPlugin {
 
         // Define variables
         token = config.getString("BotToken");
-        chatChannelID = config.getString("Channels.Chat");
-        consoleChannelID = config.getString("Channels.Console");
+        chatChannelID = config.getString("ChatRelay.Channels.Chat");
+        consoleChannelID = config.getString("ChatRelay.Channels.Console");
 
     }
 
