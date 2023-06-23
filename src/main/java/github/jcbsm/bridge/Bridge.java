@@ -2,9 +2,11 @@ package github.jcbsm.bridge;
 
 import github.jcbsm.bridge.database.IDatabaseClient;
 import github.jcbsm.bridge.listeners.PlayerChatEventListener;
+import github.jcbsm.bridge.listeners.PlayerDeathEventListener;
 import github.jcbsm.bridge.util.PlaceholderFormatter;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -66,6 +68,7 @@ public class Bridge extends JavaPlugin {
         if (config.getBoolean("ChatRelay.Enabled")) {
             System.out.println("Enabling Minecraft Chat Relay Listeners...");
             getServer().getPluginManager().registerEvents(new PlayerChatEventListener(), this);
+            getServer().getPluginManager().registerEvents(new PlayerDeathEventListener(), this);
         }
 
         // End of enable stdout.
@@ -112,19 +115,21 @@ public class Bridge extends JavaPlugin {
     public String getChatChannelID() { return chatChannelID; }
 
     /**
-     * Processes a chat message
-     * @param username Username
-     * @param message Message content
+     * Broadcasts a minecraft chat message, replacing '&' with the colour char
+     * @param message The message to send
      */
-    public void processChatMessage(String username, String message) {
-        System.out.println("Sending to discord client...");
-        discord.sendChatMessage(username, message);
+    public void broadcastMinecraftChatMessage(String message) {
+        Bukkit.getScheduler().runTaskAsynchronously(this, () ->
+                Bukkit.getServer().broadcastMessage(
+                        ChatColor.translateAlternateColorCodes('&', message)
+                ));
     }
 
-    public void processDiscordMessageReceivedEvent(MessageReceivedEvent e) {
-
-        String msg = PlaceholderFormatter.discordMessage(e);
-        Bukkit.getScheduler().runTaskAsynchronously(this, () -> Bukkit.getServer().broadcastMessage(msg));
-
+    /**
+     * Broadcasts a discord message to the Chat channel
+     * @param message Message to send
+     */
+    public void broadcastDiscordChatMessage(String message) {
+        discord.sendChatMessage(message);
     }
 }

@@ -52,22 +52,21 @@ public class BridgeDiscordClient {
         );
     }
 
-    /**
-     * Sends a message to the 'chat' discord channel
-     * @param username The username of the player who sent the message
-     * @param content The content of the message sent
-     */
-    public void sendChatMessage(String username, String content) {
-
-        // Send the message & queue
-        chat.sendMessage("**" + username + ": **" + content).queue();
-    }
-
     public Guild getGuild() {
         return guild;
     }
 
     public JDA getJDA() {
         return jda;
+    }
+
+    /**
+     * Sends a message to the 'chat' discord channel
+     * @param content The content of the message sent
+     */
+    public void sendChatMessage(String content) {
+
+        // Send the message & queue
+        chat.sendMessage(content).queue();
     }
 }

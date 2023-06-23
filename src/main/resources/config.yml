@@ -29,7 +29,7 @@ ChatRelay:
     # Available placeholders
     #   %name%:         display name from things like nicknames
     #   %username%:            raw player username
-    minecraftToDiscord:
+    MinecraftToDiscord:
 
       # Chat - A message sent into the Minecraft chat by a player.
       # Available placeholders:
@@ -41,17 +41,17 @@ ChatRelay:
       # Available placeholders:
       #   %message%   The death message (includes username)
       #   %world%     The world the player died in
-      Death: "## ***%message%***"
+      PlayerDeath: "## :skull: ***%message%***"
 
       # Join - A player joining the server
       # Available placeholders:
       #   %message%   The join message
-      Join: "# *%username% joined the server*"
+      PlayerJoin: "# *%username% joined the server*"
 
       # Leave - A player leaving the server
       # Available placeholders:
       #   %message%   The leave message
-      Leave: "# *%username% left the server*"
+      PlayerLeave: "# *%username% left the server*"
 
       # Achievement - A player earning an achievement
       # Available placeholders:
