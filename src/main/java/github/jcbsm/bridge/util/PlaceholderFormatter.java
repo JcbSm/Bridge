@@ -6,6 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.event.server.ServerLoadEvent;
 
 import java.security.cert.CertificateFactorySpi;
 import java.util.regex.Pattern;
@@ -132,5 +133,13 @@ public class PlaceholderFormatter {
         str = replaceAll(str, advancementDescription, event.getAdvancement().toString());
 
         return str;
+    }
+
+    public static String serverLoad(ServerLoadEvent event) {
+        return config.getString("MinecraftToDiscord.ServerEvents.Startup.Content");
+    }
+
+    public static String serverClose() {
+        return config.getString("MinecraftToDiscord.ServerEvents.Stop.Content");
     }
 }
