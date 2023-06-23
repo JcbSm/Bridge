@@ -26,35 +26,51 @@ ChatRelay:
       Chat: "[Discord] %username% > %message%"
 
     # Minecraft -> Discord
-    # Available placeholders
-    #   %name%:         display name from things like nicknames
-    #   %username%:            raw player username
     MinecraftToDiscord:
 
-      # Chat - A message sent into the Minecraft chat by a player.
-      # Available placeholders:
-      #   %message%   The message content
-      #   %world%     The world the message was sent from
-      PlayerChat: "**%username% >** %message%"
+      # Player Events
+      # Available placeholders for all nested
+      #   %name%:         display name from things like nicknames
+      #   %username%:            raw player username
+      PlayerEvents:
 
-      # Death - A player death
-      # Available placeholders:
-      #   %message%   The death message (includes username)
-      #   %world%     The world the player died in
-      PlayerDeath: "## :skull: ***%message%***"
+        # Chat - A message sent into the Minecraft chat by a player.
+        # Available placeholders:
+        #   %message%   The message content
+        #   %world%     The world the message was sent from
+        Chat: "**%username% >** %message%"
 
-      # Join - A player joining the server
-      # Available placeholders:
-      #   %message%   The join message
-      PlayerJoin: "# *%username% joined the server*"
+        # Death - A player death
+        # Available placeholders:
+        #   %message%   The death message (includes username)
+        #   %world%     The world the player died in
+        Death: "## :skull: ***%message%***"
 
-      # Leave - A player leaving the server
-      # Available placeholders:
-      #   %message%   The leave message
-      PlayerLeave: "# *%username% left the server*"
+        # Join - A player joining the server
+        # Available placeholders:
+        #   %message%   The join message
+        Join: "# *%username% joined the server*"
 
-      # Advancement - A player earning an advancement
-      # Available placeholders:
-      #   %title%         The advancement title
-      #   %description%   The advancement description
-      PlayerAdvancement: "## *:trophy: %username% earned an advancement!* \n**%title%** \n> %description%"
+        # Leave - A player leaving the server
+        # Available placeholders:
+        #   %message%   The leave message
+        Leave: "# *%username% left the server*"
+
+        # Advancement - A player earning an advancement
+        # Available placeholders:
+        #   %title%         The advancement title
+        #   %description%   The advancement description
+        Advancement: "## *:trophy: %username% earned an advancement!* \n**%title%** \n> %description%"
+
+      # Server Events
+      ServerEvents:
+
+        Startup:
+          Content: "# :white_check_mark: Server has started!"
+          Embed:
+            Enabled: false
+
+        Stop:
+          Content: "# :octagonal_sign: Server has stopped."
+          Embed:
+            Enabled: false

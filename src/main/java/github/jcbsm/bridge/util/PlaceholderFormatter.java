@@ -57,7 +57,7 @@ public class PlaceholderFormatter {
     public static String playerDeath(PlayerDeathEvent event) {
 
         // Get config string
-        String str = config.getString("MinecraftToDiscord.PlayerDeath");
+        String str = config.getString("MinecraftToDiscord.PlayerEvents.Death");
 
         str = replaceAll(str, username, event.getEntity().getName());
         str = replaceAll(str, displayName, event.getEntity().getDisplayName());
@@ -79,7 +79,7 @@ public class PlaceholderFormatter {
 
     public static String playerChat(AsyncPlayerChatEvent event) {
 
-        String str = config.getString("MinecraftToDiscord.PlayerChat");
+        String str = config.getString("MinecraftToDiscord.PlayerEvents.Chat");
 
         str = playerEventPlaceholders(str, event);
 
@@ -91,7 +91,7 @@ public class PlaceholderFormatter {
 
     public static String playerJoin(PlayerJoinEvent event) {
 
-        String str = config.getString("MinecraftToDiscord.PlayerJoin");
+        String str = config.getString("MinecraftToDiscord.PlayerEvents.Join");
 
         str = playerEventPlaceholders(str, event);
 
@@ -103,7 +103,7 @@ public class PlaceholderFormatter {
 
     public static String playerLeave(PlayerQuitEvent event) {
 
-        String str = config.getString("MinecraftToDiscord.PlayerLeave");
+        String str = config.getString("MinecraftToDiscord.PlayerEvents.Leave");
 
         str = playerEventPlaceholders(str, event);
         str = replaceAll(str, message, event.getQuitMessage());
@@ -114,7 +114,7 @@ public class PlaceholderFormatter {
 
     public static String playerKick(PlayerKickEvent event) {
 
-        String str = config.getString("MinecraftToDiscord.PlayerLeave");
+        String str = config.getString("MinecraftToDiscord.PlayerEvents.Leave");
 
         str = playerEventPlaceholders(str, event);
         str = replaceAll(str, message, event.getLeaveMessage());
@@ -125,7 +125,7 @@ public class PlaceholderFormatter {
 
     public static String playerAdvancement(PlayerAdvancementDoneEvent event) {
 
-        String str = config.getString("MinecraftToDiscord.PlayerAdvancement");
+        String str = config.getString("MinecraftToDiscord.PlayerEvents.Advancement");
 
         str = playerEventPlaceholders(str, event);
         str = replaceAll(str, advancementTitle, event.getAdvancement().getKey().getKey());
