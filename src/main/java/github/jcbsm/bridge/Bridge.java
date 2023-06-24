@@ -3,8 +3,9 @@ package github.jcbsm.bridge;
 import github.jcbsm.bridge.database.IDatabaseClient;
 import github.jcbsm.bridge.listeners.PlayerChatEventListener;
 import github.jcbsm.bridge.listeners.PlayerDeathEventListener;
-import github.jcbsm.bridge.util.PlaceholderFormatter;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import github.jcbsm.bridge.listeners.PlayerJoinEventListener;
+import github.jcbsm.bridge.listeners.PlayerLeaveEventListener;
+import github.jcbsm.bridge.util.MessageFormatHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -69,6 +70,10 @@ public class Bridge extends JavaPlugin {
             System.out.println("Enabling Minecraft Chat Relay Listeners...");
             getServer().getPluginManager().registerEvents(new PlayerChatEventListener(), this);
             getServer().getPluginManager().registerEvents(new PlayerDeathEventListener(), this);
+            getServer().getPluginManager().registerEvents(new PlayerJoinEventListener(), this);
+            getServer().getPluginManager().registerEvents(new PlayerLeaveEventListener(), this);
+
+            broadcastDiscordChatMessage(MessageFormatHandler.serverLoad());
         }
 
         // End of enable stdout.

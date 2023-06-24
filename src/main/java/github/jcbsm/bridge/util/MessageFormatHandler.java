@@ -3,15 +3,12 @@ package github.jcbsm.bridge.util;
 import github.jcbsm.bridge.Bridge;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.event.server.ServerLoadEvent;
 
-import java.security.cert.CertificateFactorySpi;
 import java.util.regex.Pattern;
 
-public class PlaceholderFormatter {
+public class MessageFormatHandler {
 
     private final static ConfigurationSection config = Bridge.getPlugin().getConfig().getConfigurationSection("ChatRelay.MessageFormat");
 
@@ -135,7 +132,7 @@ public class PlaceholderFormatter {
         return str;
     }
 
-    public static String serverLoad(ServerLoadEvent event) {
+    public static String serverLoad() {
         return config.getString("MinecraftToDiscord.ServerEvents.Startup.Content");
     }
 

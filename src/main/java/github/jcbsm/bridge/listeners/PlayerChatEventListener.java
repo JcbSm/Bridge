@@ -1,8 +1,7 @@
 package github.jcbsm.bridge.listeners;
 
 import github.jcbsm.bridge.Bridge;
-import github.jcbsm.bridge.util.PlaceholderFormatter;
-import org.bukkit.Bukkit;
+import github.jcbsm.bridge.util.MessageFormatHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -17,6 +16,6 @@ public class PlayerChatEventListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
 
-        Bridge.getPlugin().broadcastDiscordChatMessage(PlaceholderFormatter.playerChat(event));
+        Bridge.getPlugin().broadcastDiscordChatMessage(MessageFormatHandler.playerChat(event));
     }
 }
