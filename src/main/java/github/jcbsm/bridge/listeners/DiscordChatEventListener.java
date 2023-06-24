@@ -1,7 +1,7 @@
 package github.jcbsm.bridge.listeners;
 
 import github.jcbsm.bridge.Bridge;
-import github.jcbsm.bridge.util.PlaceholderFormatter;
+import github.jcbsm.bridge.util.MessageFormatHandler;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -15,7 +15,7 @@ public class DiscordChatEventListener extends ListenerAdapter {
 
         // Process event
         if (event.getChannel().getId().equals(Bridge.getPlugin().getChatChannelID())) {
-            Bridge.getPlugin().broadcastMinecraftChatMessage(PlaceholderFormatter.discordMessage(event));
+            Bridge.getPlugin().broadcastMinecraftChatMessage(MessageFormatHandler.discordMessage(event));
         }
     }
 }

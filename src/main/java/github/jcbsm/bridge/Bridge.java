@@ -73,11 +73,18 @@ public class Bridge extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new PlayerJoinEventListener(), this);
             getServer().getPluginManager().registerEvents(new PlayerLeaveEventListener(), this);
 
-            broadcastDiscordChatMessage(MessageFormatHandler.serverLoad());
+            Bukkit.getScheduler().scheduleSyncDelayedTask(this, () ->
+                broadcastDiscordChatMessage(MessageFormatHandler.serverLoad())
+            );
         }
 
         // End of enable stdout.
         System.out.println("========= Discord Bridge has loaded =========");
+    }
+
+    @Override
+    public void onDisable() {
+        broadcastDiscordChatMessage(MessageFormatHandler.serverClose());
     }
 
     /**
