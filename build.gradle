@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'github.jcbsm'
-version '0.0_alpha'
+version '0.1'
 
 repositories {
     mavenCentral()
