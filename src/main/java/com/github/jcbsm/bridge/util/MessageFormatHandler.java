@@ -20,6 +20,7 @@ public class MessageFormatHandler {
         displayName = escapeRegex + "%name%",
         message = escapeRegex + "%message%",
         channel = escapeRegex + "%channel%",
+        guild = escapeRegex + "%guild%",
         world = escapeRegex +"%world%",
         advancementTitle = escapeRegex + "%title%";
 
@@ -48,6 +49,8 @@ public class MessageFormatHandler {
         // Replace all %username%s
         str = replaceAll(str, username, event.getAuthor().getGlobalName());
         str = replaceAll(str, message, event.getMessage().getContentStripped());
+        str = replaceAll(str, channel, event.getChannel().getName());
+        str = replaceAll(str, guild, event.getGuild().getName());
 
         return str;
 

@@ -25,6 +25,7 @@ ChatRelay:
       #   %username%  Discord users username
       #   %message%   The message content
       #   %channel%   The channel the message was sent from
+      #   %guild%     The name of the server the message was sent from
       Chat: "[Discord] %username% > %message%"
 
     # Minecraft -> Discord
