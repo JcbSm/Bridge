@@ -8,7 +8,9 @@ ChatRelay:
 
   # Channel IDs
   Channels:
-    Chat: "000000000000000000"
+    Chat: [
+      "000000000000000000"
+    ]
     Console: "000000000000000000"
 
   # Messages Formatting

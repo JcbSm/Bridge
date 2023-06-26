@@ -17,16 +17,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class BridgeDiscordClient {
 
     private JDA jda;
     private Guild guild;
-    private TextChannel chat, console;
+    private Map<String, TextChannel> relayChannels = new HashMap<>();
     private ApplicationCommandHandler applicationCommandHandler;
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
-    public BridgeDiscordClient(String token, String chatChannelID, String consoleChannelID) throws LoginException, InvalidConfigException, InterruptedException {
+    public BridgeDiscordClient(String token, List<String> relayChannelIds, String consoleChannelID) throws LoginException, InvalidConfigException, InterruptedException {
 
         logger.info("Attempting log in...");
         JDABuilder builder = JDABuilder
@@ -50,16 +54,22 @@ public class BridgeDiscordClient {
         // Wait for the client to log in properly
         jda.awaitReady();
 
-        chat = jda.getTextChannelById(chatChannelID);
-        console = jda.getTextChannelById(consoleChannelID);
-        guild = chat.getGuild();
+        // Get channels
+        for (String id : relayChannelIds) {
+            TextChannel channel = jda.getTextChannelById(id);
+
+            if (channel == null) {
+                logger.warn("Channel with ID {} does not exist. Please remove this from config or ensure the Bot is in this server.");
+                continue;
+            }
+
+            relayChannels.put(id, channel);
+        }
+
+        logger.info(relayChannels.toString());
 
         logger.info("Registering Application commands...");
         applicationCommandHandler = new ApplicationCommandHandler(this);
-    }
-
-    public Guild getGuild() {
-        return guild;
     }
 
     public JDA getJDA() {
@@ -70,9 +80,15 @@ public class BridgeDiscordClient {
      * Sends a message to the 'chat' discord channel
      * @param content The content of the message sent
      */
-    public void sendChatMessage(String content) {
+    public void broadcastMessage(String content) {
 
         // Send the message & queue
-        chat.sendMessage(content).queue();
+        for (TextChannel channel : relayChannels.values()) {
+            try {
+                channel.sendMessage(content).queue();
+            } catch (Exception e) {
+                logger.warn("Error sending message to channel #{} [ID: {}]. {}", channel.getName(), channel.getId(), e.getLocalizedMessage());
+            }
+        }
     }
 }

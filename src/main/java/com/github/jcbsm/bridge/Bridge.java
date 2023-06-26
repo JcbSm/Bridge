@@ -2,6 +2,7 @@ package com.github.jcbsm.bridge;
 
 import com.github.jcbsm.bridge.discord.BridgeDiscordClient;
 import com.github.jcbsm.bridge.listeners.*;
+import com.github.jcbsm.bridge.util.ConfigHandler;
 import com.github.jcbsm.bridge.util.MessageFormatHandler;
 import com.github.jcbsm.bridge.database.IDatabaseClient;
 import net.kyori.adventure.text.Component;
@@ -22,7 +23,7 @@ public class Bridge extends JavaPlugin {
      */
     private BridgeDiscordClient discord;
     private IDatabaseClient db;
-    private FileConfiguration config = this.getConfig();
+    private ConfigHandler config;
 
     private final Logger logger = LoggerFactory.getLogger(Bridge.class.getSimpleName());
 
@@ -46,9 +47,10 @@ public class Bridge extends JavaPlugin {
         logger.info("Starting Bridge...");
 
         // Load config
-        initConfig();
+        config = new ConfigHandler();
 
-        if (token.equals(defaultToken)) {
+        // Check bot token has been set.
+        if (config.isDefaultValue("BotToken")) {
             logger.warn("BotToken has not been set. Please change this in /plugins/Bridge/config.yml and restart the server.");
             return;
         }
@@ -56,10 +58,15 @@ public class Bridge extends JavaPlugin {
         // Create client
         try {
             logger.info("Initialising Discord Client");
-            discord = new BridgeDiscordClient(token, chatChannelID, consoleChannelID);
+
+            discord = new BridgeDiscordClient(
+                    config.getString("BotToken"),
+                    config.getStringList("ChatRelay.Channels.Chat"),
+                    config.getString("ChatRelay.Channels.Console"));
+
         } catch (Exception e) {
             // Error
-            logger.error("CLIENT ERROR: {}", e.getLocalizedMessage());
+            logger.error("Discord Client Initialisation: {}", e.getMessage());
             return;
         }
 
@@ -88,23 +95,6 @@ public class Bridge extends JavaPlugin {
     @Override
     public void onDisable() {
         broadcastDiscordChatMessage(MessageFormatHandler.serverClose());
-    }
-
-    /**
-     * Saves the default config and initializes the config variables.
-     */
-    private void initConfig() {
-
-        logger.debug("Saving the default config.");
-
-        // Save default config
-        saveDefaultConfig();
-
-        // Define variables
-        token = config.getString("BotToken");
-        chatChannelID = config.getString("ChatRelay.Channels.Chat");
-        consoleChannelID = config.getString("ChatRelay.Channels.Console");
-
     }
 
     /**
@@ -137,6 +127,6 @@ public class Bridge extends JavaPlugin {
      * @param message Message to send
      */
     public void broadcastDiscordChatMessage(String message) {
-        discord.sendChatMessage(message);
+        discord.broadcastMessage(message);
     }
 }
