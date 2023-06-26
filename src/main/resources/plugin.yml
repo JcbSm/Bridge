@@ -1,4 +1,4 @@
-main: github.jcbsm.bridge.Bridge
+main: com.github.jcbsm.bridge.Bridge
 name: Bridge
 description: Bridge between minecraft and your discord server!
 version: 1.0.0

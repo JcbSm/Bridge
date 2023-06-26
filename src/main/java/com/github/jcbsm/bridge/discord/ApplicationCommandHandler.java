@@ -1,8 +1,11 @@
-package github.jcbsm.bridge.discord;
+package com.github.jcbsm.bridge.discord;
 
-import github.jcbsm.bridge.BridgeDiscordClient;
+import com.github.jcbsm.bridge.BridgeDiscordClient;
+import com.github.jcbsm.bridge.discord.commands.PlayerListCommand;
+import com.github.jcbsm.bridge.discord.commands.WhitelistCommand;
 import net.dv8tion.jda.api.interactions.commands.Command;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
@@ -11,13 +14,17 @@ import java.util.Arrays;
  */
 public class ApplicationCommandHandler {
 
-    BridgeDiscordClient client;
+    private final BridgeDiscordClient client;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
-    public ApplicationCommandHandler(BridgeDiscordClient client, ApplicationCommand... commands) {
+    public ApplicationCommandHandler(BridgeDiscordClient client) {
 
         this.client = client;
 
-        overWriteApplicationCommands(commands);
+        overWriteApplicationCommands(
+                new PlayerListCommand(),
+                new WhitelistCommand()
+        );
 
     }
 
@@ -45,7 +52,7 @@ public class ApplicationCommandHandler {
 
             // Delete each one
             for (Command command: commandList) {
-                System.out.println("Deleting global command: '" + command.getFullCommandName() + "'");
+                logger.info("Deleting global command: '{}'", command.getFullCommandName());
                 command.delete().queue();
             }
         });
@@ -60,7 +67,7 @@ public class ApplicationCommandHandler {
                 if (Arrays.stream(commands).anyMatch(cmd -> cmd.getName().equals(command.getName())))
                     continue;
 
-                System.out.println("Deleting guild command: '" + command.getFullCommandName() + "'");
+                logger.info("Deleting guild command: '{}'", command.getFullCommandName());
                 command.delete().queue();
             }
 

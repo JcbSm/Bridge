@@ -1,18 +1,15 @@
-package github.jcbsm.bridge.discord.commands;
+package com.github.jcbsm.bridge.discord.commands;
 
-import github.jcbsm.bridge.Bridge;
-import github.jcbsm.bridge.discord.ApplicationCommand;
-import github.jcbsm.bridge.util.Mojang;
+import com.github.jcbsm.bridge.Bridge;
+import com.github.jcbsm.bridge.discord.ApplicationCommand;
+import com.github.jcbsm.bridge.util.Mojang;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.IOException;
 import java.util.UUID;
 
 public class WhitelistCommand extends ApplicationCommand {

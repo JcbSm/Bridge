@@ -1,6 +1,6 @@
-package github.jcbsm.bridge.util;
+package com.github.jcbsm.bridge.util;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;

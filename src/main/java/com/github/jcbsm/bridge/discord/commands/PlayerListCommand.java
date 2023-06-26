@@ -1,6 +1,6 @@
-package github.jcbsm.bridge.discord.commands;
+package com.github.jcbsm.bridge.discord.commands;
 
-import github.jcbsm.bridge.discord.ApplicationCommand;
+import com.github.jcbsm.bridge.discord.ApplicationCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;

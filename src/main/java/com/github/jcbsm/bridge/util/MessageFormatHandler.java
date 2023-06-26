@@ -1,6 +1,6 @@
-package github.jcbsm.bridge.util;
+package com.github.jcbsm.bridge.util;
 
-import github.jcbsm.bridge.Bridge;
+import com.github.jcbsm.bridge.Bridge;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.entity.PlayerDeathEvent;

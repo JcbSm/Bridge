@@ -1,16 +1,19 @@
-package github.jcbsm.bridge;
+package com.github.jcbsm.bridge;
 
 
-import github.jcbsm.bridge.discord.ApplicationCommandHandler;
-import github.jcbsm.bridge.discord.commands.PlayerListCommand;
-import github.jcbsm.bridge.discord.commands.WhitelistCommand;
-import github.jcbsm.bridge.exceptions.InvalidConfigException;
-import github.jcbsm.bridge.listeners.DiscordChatEventListener;
+import com.github.jcbsm.bridge.exceptions.InvalidConfigException;
+import com.github.jcbsm.bridge.listeners.DiscordChatEventListener;
+import com.github.jcbsm.bridge.discord.ApplicationCommandHandler;
+import com.github.jcbsm.bridge.discord.commands.PlayerListCommand;
+import com.github.jcbsm.bridge.discord.commands.WhitelistCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 
@@ -20,18 +23,24 @@ public class BridgeDiscordClient {
     private Guild guild;
     private TextChannel chat, console;
     private ApplicationCommandHandler applicationCommandHandler;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     public BridgeDiscordClient(String token, String chatChannelID, String consoleChannelID) throws LoginException, InvalidConfigException, InterruptedException {
 
-        System.out.println("Attempting log in...");
-        JDABuilder builder = JDABuilder.createDefault(token,
-                    GatewayIntent.MESSAGE_CONTENT,
-                    GatewayIntent.GUILD_MESSAGES,
-                    GatewayIntent.GUILD_MEMBERS
-                );
+        logger.info("Attempting log in...");
+        JDABuilder builder = JDABuilder
+                .createDefault(token,
+                        GatewayIntent.MESSAGE_CONTENT,
+                        GatewayIntent.GUILD_MESSAGES,
+                        GatewayIntent.GUILD_MEMBERS)
+                .disableCache(
+                        CacheFlag.VOICE_STATE,
+                        CacheFlag.EMOJI,
+                        CacheFlag.STICKER,
+                        CacheFlag.SCHEDULED_EVENTS);
 
         if (Bridge.getPlugin().getConfig().getBoolean("ChatRelay.Enabled")) {
-            System.out.println("Enabling Discord Chat Relay listeners...");
+            logger.info("Enabling Discord Chat Relay listeners...");
             builder.addEventListeners(new DiscordChatEventListener());
         }
 
@@ -44,12 +53,8 @@ public class BridgeDiscordClient {
         console = jda.getTextChannelById(consoleChannelID);
         guild = chat.getGuild();
 
-        System.out.println("Registering Application commands");
-        applicationCommandHandler = new ApplicationCommandHandler(
-                this,
-                new PlayerListCommand(),
-                new WhitelistCommand()
-        );
+        logger.info("Registering Application commands...");
+        applicationCommandHandler = new ApplicationCommandHandler(this);
     }
 
     public Guild getGuild() {
