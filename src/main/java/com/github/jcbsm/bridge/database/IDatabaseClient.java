@@ -1,4 +1,4 @@
-package github.jcbsm.bridge.database;
+package com.github.jcbsm.bridge.database;
 
 import java.util.UUID;
 

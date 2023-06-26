@@ -1,7 +1,8 @@
-package github.jcbsm.bridge.listeners;
+package com.github.jcbsm.bridge.listeners;
 
-import github.jcbsm.bridge.Bridge;
-import github.jcbsm.bridge.util.MessageFormatHandler;
+import com.github.jcbsm.bridge.Bridge;
+import com.github.jcbsm.bridge.util.MessageFormatHandler;
+import io.papermc.paper.event.player.AsyncChatEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -14,7 +15,7 @@ public class PlayerChatEventListener implements Listener {
      * @param event
      */
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
+    public void onAsyncPlayerChat(AsyncChatEvent event) {
 
         Bridge.getPlugin().broadcastDiscordChatMessage(MessageFormatHandler.playerChat(event));
     }

@@ -1,7 +1,9 @@
-package github.jcbsm.bridge.util;
+package com.github.jcbsm.bridge.util;
 
-import github.jcbsm.bridge.Bridge;
+import com.github.jcbsm.bridge.Bridge;
+import io.papermc.paper.event.player.AsyncChatEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
@@ -19,8 +21,7 @@ public class MessageFormatHandler {
         message = escapeRegex + "%message%",
         channel = escapeRegex + "%channel%",
         world = escapeRegex +"%world%",
-        advancementTitle = escapeRegex + "%title%",
-        advancementDescription = escapeRegex + "%description%";
+        advancementTitle = escapeRegex + "%title%";
 
     /**
      * Replaces all the occurences of 'regex' with 'replacement' in 'input'
@@ -58,8 +59,8 @@ public class MessageFormatHandler {
         String str = config.getString("MinecraftToDiscord.PlayerEvents.Death");
 
         str = replaceAll(str, username, event.getEntity().getName());
-        str = replaceAll(str, displayName, event.getEntity().getDisplayName());
-        str = replaceAll(str, message, event.getDeathMessage());
+        str = replaceAll(str, displayName, ComponentUtil.getPlainText(event.getEntity().displayName()));
+        str = replaceAll(str, message, ComponentUtil.getPlainText(event.deathMessage()));
         str = replaceAll(str, world, event.getEntity().getWorld().getName());
 
         return str;
@@ -69,19 +70,19 @@ public class MessageFormatHandler {
     private static String playerEventPlaceholders(String str, PlayerEvent event) {
 
         str = replaceAll(str, username, event.getPlayer().getName());
-        str = replaceAll(str, displayName, event.getPlayer().getDisplayName());
+        str = replaceAll(str, displayName, ComponentUtil.getPlainText(event.getPlayer().displayName()));
 
         return str;
 
     }
 
-    public static String playerChat(AsyncPlayerChatEvent event) {
+    public static String playerChat(AsyncChatEvent event) {
 
         String str = config.getString("MinecraftToDiscord.PlayerEvents.Chat");
 
         str = playerEventPlaceholders(str, event);
 
-        str = replaceAll(str, message, event.getMessage());
+        str = replaceAll(str, message, ComponentUtil.getPlainText(event.message()));
         str = replaceAll(str, world, event.getPlayer().getWorld().getName());
 
         return str;
@@ -93,7 +94,7 @@ public class MessageFormatHandler {
 
         str = playerEventPlaceholders(str, event);
 
-        str = replaceAll(str, message, event.getJoinMessage());
+        str = replaceAll(str, message, ComponentUtil.getPlainText(event.joinMessage()));
         str = replaceAll(str, world, event.getPlayer().getWorld().getName());
 
         return str;
@@ -104,7 +105,7 @@ public class MessageFormatHandler {
         String str = config.getString("MinecraftToDiscord.PlayerEvents.Leave");
 
         str = playerEventPlaceholders(str, event);
-        str = replaceAll(str, message, event.getQuitMessage());
+        str = replaceAll(str, message, ComponentUtil.getPlainText(event.quitMessage()));
         str = replaceAll(str, world, event.getPlayer().getWorld().getName());
 
         return str;
@@ -115,7 +116,7 @@ public class MessageFormatHandler {
         String str = config.getString("MinecraftToDiscord.PlayerEvents.Leave");
 
         str = playerEventPlaceholders(str, event);
-        str = replaceAll(str, message, event.getLeaveMessage());
+        str = replaceAll(str, message, ComponentUtil.getPlainText(event.leaveMessage()));
         str = replaceAll(str, world, event.getPlayer().getWorld().getName());
 
         return str;
@@ -126,8 +127,7 @@ public class MessageFormatHandler {
         String str = config.getString("MinecraftToDiscord.PlayerEvents.Advancement");
 
         str = playerEventPlaceholders(str, event);
-        str = replaceAll(str, advancementTitle, event.getAdvancement().getKey().getKey());
-        str = replaceAll(str, advancementDescription, event.getAdvancement().toString());
+        str = replaceAll(str, advancementTitle, ComponentUtil.getPlainText(event.getAdvancement().displayName()));
 
         return str;
     }

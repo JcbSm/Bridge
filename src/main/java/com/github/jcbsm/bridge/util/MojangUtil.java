@@ -1,6 +1,6 @@
-package github.jcbsm.bridge.util;
+package com.github.jcbsm.bridge.util;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -8,7 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.UUID;
 
-public class Mojang {
+public class MojangUtil {
 
     @Nullable
     public static UUID getUserUUID(String username) {

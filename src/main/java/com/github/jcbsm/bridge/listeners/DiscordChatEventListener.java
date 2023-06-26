@@ -1,7 +1,7 @@
-package github.jcbsm.bridge.listeners;
+package com.github.jcbsm.bridge.listeners;
 
-import github.jcbsm.bridge.Bridge;
-import github.jcbsm.bridge.util.MessageFormatHandler;
+import com.github.jcbsm.bridge.Bridge;
+import com.github.jcbsm.bridge.util.MessageFormatHandler;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 

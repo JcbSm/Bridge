@@ -1,4 +1,4 @@
-package github.jcbsm.bridge.discord;
+package com.github.jcbsm.bridge.discord;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
