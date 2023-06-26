@@ -88,3 +88,4 @@ tasks.register('buildRunServer') {
     dependsOn 'jarIntoServer', 'runServer'
 }
 
+compileJava.options.compilerArgs = ['-Xlint:unchecked', '-Xlint:deprecation']

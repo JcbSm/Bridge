@@ -2,7 +2,7 @@ package com.github.jcbsm.bridge.discord.commands;
 
 import com.github.jcbsm.bridge.Bridge;
 import com.github.jcbsm.bridge.discord.ApplicationCommand;
-import com.github.jcbsm.bridge.util.Mojang;
+import com.github.jcbsm.bridge.util.MojangUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -40,7 +40,7 @@ public class WhitelistCommand extends ApplicationCommand {
 
         // Get usernames & uuid
         String username = option.getAsString();
-        UUID uuid = Mojang.getUserUUID(username);
+        UUID uuid = MojangUtil.getUserUUID(username);
 
         if (uuid == null) {
             event.getHook().sendMessage("No user exists").queue();

@@ -8,7 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.UUID;
 
-public class Mojang {
+public class MojangUtil {
 
     @Nullable
     public static UUID getUserUUID(String username) {

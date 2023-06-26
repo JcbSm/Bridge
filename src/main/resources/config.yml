@@ -49,18 +49,17 @@ ChatRelay:
         # Join - A player joining the server
         # Available placeholders:
         #   %message%   The join message
-        Join: "# *%username% joined the server*"
+        Join: "## *%username% joined the server*"
 
         # Leave - A player leaving the server
         # Available placeholders:
         #   %message%   The leave message
-        Leave: "# *%username% left the server*"
+        Leave: "## *%username% left the server*"
 
         # Advancement - A player earning an advancement
         # Available placeholders:
         #   %title%         The advancement title
-        #   %description%   The advancement description
-        Advancement: "## *:trophy: %username% earned an advancement!* \n**%title%** \n> %description%"
+        Advancement: "## :trophy: %username% earned an advancement! *%title%*"
 
       # Server Events
       ServerEvents:

@@ -1,15 +1,15 @@
 package com.github.jcbsm.bridge;
 
 import com.github.jcbsm.bridge.discord.BridgeDiscordClient;
-import com.github.jcbsm.bridge.listeners.PlayerDeathEventListener;
-import com.github.jcbsm.bridge.listeners.PlayerJoinEventListener;
-import com.github.jcbsm.bridge.listeners.PlayerLeaveEventListener;
+import com.github.jcbsm.bridge.listeners.*;
 import com.github.jcbsm.bridge.util.MessageFormatHandler;
 import com.github.jcbsm.bridge.database.IDatabaseClient;
-import com.github.jcbsm.bridge.listeners.PlayerChatEventListener;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import org.slf4j.Logger;
@@ -74,6 +74,7 @@ public class Bridge extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new PlayerDeathEventListener(), this);
             getServer().getPluginManager().registerEvents(new PlayerJoinEventListener(), this);
             getServer().getPluginManager().registerEvents(new PlayerLeaveEventListener(), this);
+            getServer().getPluginManager().registerEvents(new PlayerAdvancementDoneEventListener(), this);
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(this, () ->
                 broadcastDiscordChatMessage(MessageFormatHandler.serverLoad())
@@ -128,9 +129,7 @@ public class Bridge extends JavaPlugin {
      */
     public void broadcastMinecraftChatMessage(String message) {
         Bukkit.getScheduler().runTaskAsynchronously(this, () ->
-                Bukkit.getServer().broadcastMessage(
-                        ChatColor.translateAlternateColorCodes('&', message)
-                ));
+                Bukkit.getServer().broadcast(LegacyComponentSerializer.legacyAmpersand().deserialize(message)));
     }
 
     /**
