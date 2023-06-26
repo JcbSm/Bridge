@@ -1,15 +1,20 @@
-package github.jcbsm.bridge;
+package com.github.jcbsm.bridge;
 
-import github.jcbsm.bridge.database.IDatabaseClient;
-import github.jcbsm.bridge.listeners.PlayerChatEventListener;
-import github.jcbsm.bridge.listeners.PlayerDeathEventListener;
-import github.jcbsm.bridge.listeners.PlayerJoinEventListener;
-import github.jcbsm.bridge.listeners.PlayerLeaveEventListener;
-import github.jcbsm.bridge.util.MessageFormatHandler;
+import com.github.jcbsm.bridge.discord.BridgeDiscordClient;
+import com.github.jcbsm.bridge.listeners.*;
+import com.github.jcbsm.bridge.util.ConfigHandler;
+import com.github.jcbsm.bridge.util.MessageFormatHandler;
+import com.github.jcbsm.bridge.database.IDatabaseClient;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Bridge extends JavaPlugin {
 
@@ -18,7 +23,9 @@ public class Bridge extends JavaPlugin {
      */
     private BridgeDiscordClient discord;
     private IDatabaseClient db;
-    private FileConfiguration config = this.getConfig();
+    private ConfigHandler config;
+
+    private final Logger logger = LoggerFactory.getLogger(Bridge.class.getSimpleName());
 
     /**
      * The default config variables.
@@ -37,41 +44,44 @@ public class Bridge extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        // Display Load messages
-        System.out.println("========= Discord Bridge has started =========");
-        System.out.println("Initializing...");
+        logger.info("Starting Bridge...");
 
         // Load config
-        initConfig();
+        config = new ConfigHandler();
 
-        if (token.equals(defaultToken)) {
-            System.err.println("CONFIG ERROR: Token has not been set!");
-            displayTerminationMessage();
+        // Check bot token has been set.
+        if (config.isDefaultValue("BotToken")) {
+            logger.warn("BotToken has not been set. Please change this in /plugins/Bridge/config.yml and restart the server.");
             return;
         }
 
         // Create client
         try {
-            System.out.println("Creating Discord Client...");
-            discord = new BridgeDiscordClient(token, chatChannelID, consoleChannelID);
+            logger.info("Initialising Discord Client");
+
+            discord = new BridgeDiscordClient(
+                    config.getString("BotToken"),
+                    config.getStringList("ChatRelay.Channels.Chat"),
+                    config.getString("ChatRelay.Channels.Console"));
+
         } catch (Exception e) {
             // Error
-            System.err.println("CLIENT ERROR: " + e.getLocalizedMessage());
-            displayTerminationMessage();
+            logger.error("Discord Client Initialisation: {}", e.getMessage());
             return;
         }
 
         // Create db
 
         // Register Bukkit event listeners
-        System.out.println("Registering Listeners...");
+        logger.info("Registering bukkit listeners...");
 
         if (config.getBoolean("ChatRelay.Enabled")) {
-            System.out.println("Enabling Minecraft Chat Relay Listeners...");
+            logger.info("Enabling Minecraft Chat Relay Listeners...");
             getServer().getPluginManager().registerEvents(new PlayerChatEventListener(), this);
             getServer().getPluginManager().registerEvents(new PlayerDeathEventListener(), this);
             getServer().getPluginManager().registerEvents(new PlayerJoinEventListener(), this);
             getServer().getPluginManager().registerEvents(new PlayerLeaveEventListener(), this);
+            getServer().getPluginManager().registerEvents(new PlayerAdvancementDoneEventListener(), this);
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(this, () ->
                 broadcastDiscordChatMessage(MessageFormatHandler.serverLoad())
@@ -79,35 +89,12 @@ public class Bridge extends JavaPlugin {
         }
 
         // End of enable stdout.
-        System.out.println("========= Discord Bridge has loaded =========");
+        logger.info("Done.");
     }
 
     @Override
     public void onDisable() {
         broadcastDiscordChatMessage(MessageFormatHandler.serverClose());
-    }
-
-    /**
-     * Displays a termination message to notify user the plugin did not load correctly.
-     */
-    private void displayTerminationMessage() {
-        System.out.println("The plugin has not loaded correctly.");
-        System.out.println("============ Discord Bridge out! ============");
-    }
-
-    /**
-     * Saves the default config and initializes the config variables.
-     */
-    private void initConfig() {
-
-        // Save default config
-        saveDefaultConfig();
-
-        // Define variables
-        token = config.getString("BotToken");
-        chatChannelID = config.getString("ChatRelay.Channels.Chat");
-        consoleChannelID = config.getString("ChatRelay.Channels.Console");
-
     }
 
     /**
@@ -132,9 +119,7 @@ public class Bridge extends JavaPlugin {
      */
     public void broadcastMinecraftChatMessage(String message) {
         Bukkit.getScheduler().runTaskAsynchronously(this, () ->
-                Bukkit.getServer().broadcastMessage(
-                        ChatColor.translateAlternateColorCodes('&', message)
-                ));
+                Bukkit.getServer().broadcast(LegacyComponentSerializer.legacyAmpersand().deserialize(message)));
     }
 
     /**
@@ -142,6 +127,6 @@ public class Bridge extends JavaPlugin {
      * @param message Message to send
      */
     public void broadcastDiscordChatMessage(String message) {
-        discord.sendChatMessage(message);
+        discord.broadcastMessage(message);
     }
 }

@@ -1,16 +1,17 @@
-package github.jcbsm.bridge.discord.commands;
+package com.github.jcbsm.bridge.discord.commands;
 
-import github.jcbsm.bridge.discord.ApplicationCommand;
+import com.github.jcbsm.bridge.discord.ApplicationCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class PlayerListCommand extends ApplicationCommand {
 
     public PlayerListCommand() {
-        super("list", "List the players online.");
+        super("playerlist", "List the players online.");
     }
 
     /**
@@ -34,7 +35,7 @@ public class PlayerListCommand extends ApplicationCommand {
 
             // Append each player to the list
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                msg.append("- " + player.getDisplayName() + System.lineSeparator());
+                msg.append("- " + ((TextComponent) player.displayName()).content() + System.lineSeparator());
             }
 
             event.reply(msg.toString()).setEphemeral(true).queue();

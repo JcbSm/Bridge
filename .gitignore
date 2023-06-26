@@ -44,4 +44,6 @@ bin/
 
 ### Test Server ###
 /testsrv/
+
+### Logo ###
 *.xcf

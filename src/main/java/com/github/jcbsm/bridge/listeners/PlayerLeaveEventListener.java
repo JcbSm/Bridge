@@ -1,7 +1,7 @@
-package github.jcbsm.bridge.listeners;
+package com.github.jcbsm.bridge.listeners;
 
-import github.jcbsm.bridge.Bridge;
-import github.jcbsm.bridge.util.MessageFormatHandler;
+import com.github.jcbsm.bridge.Bridge;
+import com.github.jcbsm.bridge.util.MessageFormatHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

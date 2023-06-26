@@ -4,14 +4,21 @@ plugins {
 }
 
 group 'github.jcbsm'
-version '0.0_alpha'
+version '0.1'
 
 repositories {
     mavenCentral()
-    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven {
+        name "papermc-repo"
+        url "https://repo.papermc.io/repository/maven-public/"
+    }
     maven {
         name 'm2-dv8tion'
         url 'https://m2.dv8tion.net/releases'
+    }
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/groups/public/"
     }
 }
 
@@ -19,9 +26,20 @@ dependencies {
     implementation ('net.dv8tion:JDA:5.0.0-beta.11') {
         exclude module: 'opus-java'
     }
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly "io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT"
+}
+
+def targetJavaVersion = 17
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
 }
 
 jar {
@@ -30,16 +48,21 @@ jar {
     }
 }
 
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
 shadowJar {
     archiveClassifier = ''
 }
 
-test {
-    useJUnitPlatform()
-}
-
 tasks.register('jarIntoServer') {
-    group 'build'
+    group 'server'
     dependsOn 'shadowJar'
     doLast {
         copy {
@@ -54,7 +77,7 @@ tasks.register('runServer') {
     doLast {
         exec {
             workingDir "${projectDir}/testsrv/"
-            commandLine 'java', '-jar', 'spigot-1.19.2.jar', '-nogui'
+            commandLine 'java', '-jar', 'paper-1.19.2.jar', '-nogui'
         }
     }
 }
@@ -62,12 +85,7 @@ tasks.register('runServer') {
 
 tasks.register('buildRunServer') {
     group 'server'
-    dependsOn 'jarIntoServer'
-    doLast {
-        exec {
-            workingDir "${projectDir}/testsrv/"
-            commandLine 'java', '-jar', 'spigot-1.19.2.jar', '-nogui'
-        }
-    }
+    dependsOn 'jarIntoServer', 'runServer'
 }
 
+compileJava.options.compilerArgs = ['-Xlint:unchecked', '-Xlint:deprecation']
