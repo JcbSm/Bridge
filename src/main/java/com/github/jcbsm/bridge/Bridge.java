@@ -1,5 +1,6 @@
 package com.github.jcbsm.bridge;
 
+import com.github.jcbsm.bridge.discord.BridgeDiscordClient;
 import com.github.jcbsm.bridge.listeners.PlayerDeathEventListener;
 import com.github.jcbsm.bridge.listeners.PlayerJoinEventListener;
 import com.github.jcbsm.bridge.listeners.PlayerLeaveEventListener;

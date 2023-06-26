@@ -1,8 +1,8 @@
 package com.github.jcbsm.bridge.discord;
 
-import com.github.jcbsm.bridge.BridgeDiscordClient;
 import com.github.jcbsm.bridge.discord.commands.PlayerListCommand;
 import com.github.jcbsm.bridge.discord.commands.WhitelistCommand;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ public class ApplicationCommandHandler {
 
         this.client = client;
 
-        overWriteApplicationCommands(
+        overwriteApplicationCommands(
                 new PlayerListCommand(),
                 new WhitelistCommand()
         );
@@ -32,11 +32,11 @@ public class ApplicationCommandHandler {
      * Register a new command + listen for interactions.
      * @param command The command to register
      */
-    public void registerApplicationCommand(ApplicationCommand command) {
+    public void registerGuildApplicationCommand(Guild guild, ApplicationCommand command) {
+
+        logger.info("Registering {} command to guild {}", command.getName(), guild.getName());
         // Register command
-        client.getGuild().upsertCommand(command.getCommandData()).queue();
-        // Handle listener
-        client.getJDA().addEventListener(command);
+        guild.upsertCommand(command.getCommandData()).queue();
     }
 
     /**
@@ -46,7 +46,7 @@ public class ApplicationCommandHandler {
      * Updates the existing ones.
      * @param commands
      */
-    public void overWriteApplicationCommands(ApplicationCommand... commands) {
+    public void overwriteApplicationCommands(ApplicationCommand... commands) {
         // Retrieve global commands, delete all to ensure no wrong commands
         client.getJDA().retrieveCommands().queue((commandList) -> {
 
@@ -57,24 +57,33 @@ public class ApplicationCommandHandler {
             }
         });
 
-        // Retrieve guild commands
-        client.getGuild().retrieveCommands().queue((commandList -> {
+        // For each guild
+        for (Guild guild : client.getJDA().getGuilds()) {
 
-            // Delete each one
-            for (Command command: commandList) {
+            guild.retrieveCommands().queue((commandList -> {
 
-                // Unless it's in the current ones
-                if (Arrays.stream(commands).anyMatch(cmd -> cmd.getName().equals(command.getName())))
-                    continue;
+                // Get each command
+                for (Command command: commandList) {
 
-                logger.info("Deleting guild command: '{}'", command.getFullCommandName());
-                command.delete().queue();
-            }
+                    // Ignore it's in the current ones
+                    if (Arrays.stream(commands).anyMatch(cmd -> cmd.getName().equals(command.getName())))
+                        continue;
 
-            // For each command, register it
-            for (ApplicationCommand command : commands) {
-                registerApplicationCommand(command);
-            }
-        }));
+                    // Otherwise, delet it
+                    logger.info("Deleting {} command in guild {}", command.getFullCommandName(), guild.getName());
+                    command.delete().queue();
+                }
+
+                // Register the command.
+                for (ApplicationCommand command : commands) {
+                    registerGuildApplicationCommand(guild, command);
+                }
+            }));
+        }
+
+        // Add listeners
+        for (ApplicationCommand command : commands) {
+            client.getJDA().addEventListener(command);
+        }
     }
 }

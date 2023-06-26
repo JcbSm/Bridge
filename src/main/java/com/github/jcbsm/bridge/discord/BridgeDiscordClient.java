@@ -1,6 +1,7 @@
-package com.github.jcbsm.bridge;
+package com.github.jcbsm.bridge.discord;
 
 
+import com.github.jcbsm.bridge.Bridge;
 import com.github.jcbsm.bridge.exceptions.InvalidConfigException;
 import com.github.jcbsm.bridge.listeners.DiscordChatEventListener;
 import com.github.jcbsm.bridge.discord.ApplicationCommandHandler;

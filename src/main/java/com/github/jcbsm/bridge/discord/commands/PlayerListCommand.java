@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class PlayerListCommand extends ApplicationCommand {
 
     public PlayerListCommand() {
-        super("list", "List the players online.");
+        super("playerlist", "List the players online.");
     }
 
     /**
