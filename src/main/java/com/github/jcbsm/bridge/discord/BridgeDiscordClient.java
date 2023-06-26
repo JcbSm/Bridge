@@ -46,7 +46,7 @@ public class BridgeDiscordClient {
 
         if (Bridge.getPlugin().getConfig().getBoolean("ChatRelay.Enabled")) {
             logger.info("Enabling Discord Chat Relay listeners...");
-            builder.addEventListeners(new DiscordChatEventListener());
+            builder.addEventListeners(new DiscordChatEventListener(this));
         }
 
         jda = builder.build();
@@ -90,5 +90,9 @@ public class BridgeDiscordClient {
                 logger.warn("Error sending message to channel #{} [ID: {}]. {}", channel.getName(), channel.getId(), e.getLocalizedMessage());
             }
         }
+    }
+
+    public Map<String, TextChannel> getRelayChannels() {
+        return relayChannels;
     }
 }
