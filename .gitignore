@@ -44,3 +44,4 @@ bin/
 
 ### Test Server ###
 /testsrv/
+*.xcf
