@@ -18,13 +18,18 @@ import java.util.function.Function;
 public class ConfigHandler {
 
     private final Map<String, Object> cache = new HashMap<>();
+    private final Bridge plugin;
     private final FileConfiguration config;
     private final Configuration defaults;
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     public ConfigHandler() {
-        config = Bridge.getPlugin().getConfig();
+        plugin = Bridge.getPlugin();
+        config = plugin.getConfig();
         defaults = config.getDefaults();
+
+        // Save default config
+        plugin.saveDefaultConfig();
     }
 
     /**
