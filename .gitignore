@@ -1,3 +1,7 @@
+### sqlite3
+*.db
+*.db-journal
+
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
