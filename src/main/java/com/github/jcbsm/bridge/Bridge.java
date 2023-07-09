@@ -4,13 +4,8 @@ import com.github.jcbsm.bridge.discord.BridgeDiscordClient;
 import com.github.jcbsm.bridge.listeners.*;
 import com.github.jcbsm.bridge.util.ConfigHandler;
 import com.github.jcbsm.bridge.util.MessageFormatHandler;
-import com.github.jcbsm.bridge.database.IDatabaseClient;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import org.slf4j.Logger;
@@ -22,7 +17,7 @@ public class Bridge extends JavaPlugin {
      * Plugin variables, clients, util etc
      */
     private BridgeDiscordClient discord;
-    private IDatabaseClient db;
+    private DatabaseClient db;
     private ConfigHandler config;
 
     private final Logger logger = LoggerFactory.getLogger(Bridge.class.getSimpleName());
@@ -70,8 +65,6 @@ public class Bridge extends JavaPlugin {
             return;
         }
 
-        // Create db
-
         // Register Bukkit event listeners
         logger.info("Registering bukkit listeners...");
 
@@ -87,6 +80,9 @@ public class Bridge extends JavaPlugin {
                 broadcastDiscordChatMessage(MessageFormatHandler.serverLoad())
             );
         }
+
+        // sanamorii: initialise database.
+        this.db = DatabaseClient.getDatabase();
 
         // End of enable stdout.
         logger.info("Done.");
@@ -105,11 +101,13 @@ public class Bridge extends JavaPlugin {
         return getPlugin(Bridge.class);
     }
 
-    /**
-     * Get the database
-     * @return
-     */
-    public IDatabaseClient getDB() { return db; }
+
+    // sanamorii: not needed if the database is a singleton pattern
+//    /**
+//     * Get the database
+//     * @return
+//     */
+//    public DatabaseClient getDB() { return db; }
 
     public String getChatChannelID() { return chatChannelID; }
 
