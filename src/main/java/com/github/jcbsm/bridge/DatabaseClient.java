@@ -1,20 +1,19 @@
 package com.github.jcbsm.bridge;
 
-import java.sql.*;
-import java.util.UUID;
-
 import com.github.jcbsm.bridge.exceptions.DatabaseNoResultException;
 import com.github.jcbsm.bridge.mojang.entities.Player;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.sql.*;
+import java.util.UUID;
 
 public class DatabaseClient {
 
     private static DatabaseClient client = new DatabaseClient();
     private final Logger logger = LoggerFactory.getLogger(DatabaseClient.class.getSimpleName());
-    private Bridge plugin;
+    private final Bridge plugin;
 
     private DatabaseClient(){
         this.plugin = Bridge.getPlugin();
@@ -41,19 +40,21 @@ public class DatabaseClient {
 
 
     private void createTables(){
-        String membersTable = "CREATE TABLE \"members\" (\n" +
-                "\t\"member_id\"\tINTEGER NOT NULL UNIQUE,\n" +
-                "\t\"member_name\"\tTEXT NOT NULL,\n" +
-                "\t\"member_linked\"\tINTEGER NOT NULL DEFAULT 0,\n" +
-                "\tPRIMARY KEY(\"member_id\")\n" +
-                ")";
-        String minecraftTable = "CREATE TABLE \"minecraft\" (\n" +
-                "\t\"minecraft_uuid\"\tTEXT NOT NULL UNIQUE,\n" +
-                "\t\"minecraft_name\"\tTEXT NOT NULL UNIQUE,\n" +
-                "\t\"member_id\"\tINTEGER NOT NULL,\n" +
-                "\tPRIMARY KEY(\"minecraft_uuiid\"),\n" +
-                "\tFOREIGN KEY(\"member_id\") REFERENCES \"members\"(\"member_id\") ON UPDATE CASCADE ON DELETE CASCADE\n" +
-                ")";
+        String membersTable = """
+                CREATE TABLE "members" (
+                \t"member_id"\tINTEGER NOT NULL UNIQUE,
+                \t"member_name"\tTEXT NOT NULL,
+                \t"member_linked"\tINTEGER NOT NULL DEFAULT 0,
+                \tPRIMARY KEY("member_id")
+                )""";
+        String minecraftTable = """
+                CREATE TABLE "minecraft" (
+                \t"minecraft_uuid"\tTEXT NOT NULL UNIQUE,
+                \t"minecraft_name"\tTEXT NOT NULL UNIQUE,
+                \t"member_id"\tINTEGER NOT NULL,
+                \tPRIMARY KEY("minecraft_uuiid"),
+                \tFOREIGN KEY("member_id") REFERENCES "members"("member_id") ON UPDATE CASCADE ON DELETE CASCADE
+                )""";
 
         try (Connection conn = this.connect()){
             Statement stmt = conn.createStatement();
@@ -138,16 +139,17 @@ public class DatabaseClient {
      * @param user JDA user object - represents the user who invoked the command.
      * @return The minecraft UUID currently stored.
      */
-    public String getCurrentUUID(User user)
-        throws DatabaseNoResultException {
+    public UUID getCurrentUUID(User user) throws Exception {
         String sql = "SELECT minecraft_uuid FROM minecraft WHERE member_id = ?";
+        UUID uuid;
+
         try (Connection conn = this.connect()){
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setLong(1, user.getIdLong());
 
             if (stmt.execute()){
                 ResultSet res = stmt.executeQuery(sql);
-                return res.getString("member_uuid");
+                uuid = UUID.fromString(res.getString("member_uuid"));
             }
             else{
                 throw new DatabaseNoResultException("member_uuid", String.valueOf(user.getIdLong()));
@@ -156,36 +158,63 @@ public class DatabaseClient {
 
         catch (SQLException e){
             logger.warn("Error");
+            throw e;
         }
+
+        return uuid;
     }
 
+
+    // TODO: sanamorii - Literal duplicate code of getCurrentUUID, find a better way to do this.
     /**
      * Returns the Minecraft Username currently associate with the provided discord user ID
-     * @param userId Discord user Id to search for
+     * @param user Discord user Id to search for
      * @return The Minecraft Username stored.
      */
-    String getCurrentUsername(String userId){
-        return null;
+    public String getCurrentUsername(User user) throws Exception{
+        String sql = "SELECT minecraft_name FROM minecraft WHERE member_id = ?";
+        String username;
+
+        try (Connection conn = this.connect()){
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setLong(1, user.getIdLong());
+
+            if (stmt.execute()){
+                ResultSet res = stmt.executeQuery(sql);
+                username = res.getString("member_name");
+            }
+            else{
+                throw new DatabaseNoResultException("member_name", String.valueOf(user.getIdLong()));
+            }
+        }
+
+        catch (SQLException e){
+            logger.warn("Error");
+            throw e;
+        }
+
+        return username;
     }
 
     /**
      * Sets the username for the Discord user.
-     * @param userId Discord User's ID
-     * @param username The UUID to set.
+     * @param user JDA user object - representative of the command invoker.
+     * @throws Exception lol
      */
-    public void setUsername(Member member){
+    public void setDiscordName(User user) throws Exception{
         String sql = "UPDATE members SET member_name = ? WHERE member_id = ?";
 
         try (Connection conn = this.connect();
              PreparedStatement stmt = conn.prepareStatement(sql)){
-            stmt.setString(1, member.getUser().getGlobalName());
-            stmt.setLong(2, member.getIdLong());
+            stmt.setString(1, user.getGlobalName());
+            stmt.setLong(2, user.getIdLong());
 
             stmt.executeUpdate();
         }
 
         catch (SQLException e){
             this.logger.warn("Error: " + e.getMessage());
+            throw e;
         }
     }
 
