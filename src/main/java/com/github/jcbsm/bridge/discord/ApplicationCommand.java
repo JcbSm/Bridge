@@ -3,6 +3,8 @@ package com.github.jcbsm.bridge.discord;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract class for Application Commands
@@ -13,6 +15,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 public abstract class ApplicationCommand extends ListenerAdapter {
 
     private final String name, description;
+    private final Logger logger;
 
     /**
      * Creates an instance of an Application Command
@@ -22,6 +25,7 @@ public abstract class ApplicationCommand extends ListenerAdapter {
     public ApplicationCommand(String name, String description) {
         this.name = name;
         this.description = description;
+        this.logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
     }
 
     /**
@@ -64,4 +68,7 @@ public abstract class ApplicationCommand extends ListenerAdapter {
      */
     public abstract CommandData getCommandData();
 
+    public Logger getLogger() {
+        return logger;
+    }
 }
