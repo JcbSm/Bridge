@@ -2,9 +2,8 @@ package com.github.jcbsm.bridge.discord.commands;
 
 import com.github.jcbsm.bridge.Bridge;
 import com.github.jcbsm.bridge.DatabaseClient;
-import com.github.jcbsm.bridge.mojang.MojangRequest;
 import com.github.jcbsm.bridge.discord.ApplicationCommand;
-import com.github.jcbsm.bridge.mojang.entities.Player;
+import com.github.jcbsm.bridge.util.MojangRequest;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -13,8 +12,6 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import org.bukkit.Bukkit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 
 // TODO: sanamorii - add option to remove username (subcommands)
@@ -32,6 +29,7 @@ public class WhitelistCommand extends ApplicationCommand {
         return Commands.slash(getName(), getDescription())
                 .addOption(OptionType.STRING, "username", "The Minecraft username you wish to whitelist.");
     }
+
     @Override
     public void run(SlashCommandInteractionEvent event) {
 
@@ -49,32 +47,38 @@ public class WhitelistCommand extends ApplicationCommand {
 
         // Get usernames & uuid
         String username = option.getAsString();
-        MojangRequest<Player> usernameToUUID = new MojangRequest<>(new Player(username));  // me when generics
+        MojangRequest mojangRequest = new MojangRequest();
 
         try{
-            Player player = usernameToUUID.execute();
+            String uuid = mojangRequest.usernameToUUID(username);
 
-            if (player.exists() == false) {
+            if (uuid == null) {
                 event.getHook().sendMessage("No user exists").queue();
                 return;
             }
 
             System.out.println("User " + event.getUser().getGlobalName() + " executed /whitelist from Discord.");
 
-            // Add name to whitelist
-            Bukkit.getScheduler().runTask(Bridge.getPlugin(), () -> Bukkit.getServer().dispatchCommand(
-                            Bukkit.getServer().getConsoleSender(),
-                            "whitelist add" + player.getUsername()
-                    ));
 
+            int res = database.linkAccount(event.getUser(), uuid, username);
+            if (res == 1) {
+                database.unlinkAccount(uuid);
+                event.getHook().sendMessage("Deleted: `" + username + "`").queue();
+            } else { // Add name to whitelist
 
-            database.linkMember(event.getUser(), player);
-            event.getHook().sendMessage("`Added: `" + player.getUsername() + "`").queue();
-            this.logger.info(String.format("User '%s' has registered their account '%s' to the whitelist",
-                    event.getUser().getName(), player.getUsername()));
+                Bukkit.getScheduler().runTask(Bridge.getPlugin(), () -> Bukkit.getServer().dispatchCommand(
+                        Bukkit.getServer().getConsoleSender(),
+                        "whitelist add " + username
+                ));
+
+                event.getHook().sendMessage("Added: `" + username + "`").queue();
+                this.logger.info(String.format("User '%s' has registered their account '%s' to the whitelist",
+                        event.getUser().getName(), username));
+            }
+
         }
         catch (Exception e){
-            this.logger.warn("Fuck");
+            e.printStackTrace();
             event.getHook().sendMessage("An unexpected error has occurred.").queue();
         }
     }
