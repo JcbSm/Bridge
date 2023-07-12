@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+// TODO: sanamorii - Should this not be a singleton?
 public class ConfigHandler {
 
     private final Map<String, Object> cache = new HashMap<>();

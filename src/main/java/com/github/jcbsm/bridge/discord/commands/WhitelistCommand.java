@@ -1,18 +1,24 @@
 package com.github.jcbsm.bridge.discord.commands;
 
 import com.github.jcbsm.bridge.Bridge;
+import com.github.jcbsm.bridge.DatabaseClient;
 import com.github.jcbsm.bridge.discord.ApplicationCommand;
-import com.github.jcbsm.bridge.util.MojangUtil;
+import com.github.jcbsm.bridge.util.MojangRequest;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import org.bukkit.Bukkit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.UUID;
 
+// TODO: sanamorii - add option to remove username (subcommands)
 public class WhitelistCommand extends ApplicationCommand {
+
+    private final DatabaseClient database = DatabaseClient.getDatabase();
+    private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     public WhitelistCommand() {
         super("whitelist", "Add your Minecraft account to the whitelist");
@@ -23,11 +29,12 @@ public class WhitelistCommand extends ApplicationCommand {
         return Commands.slash(getName(), getDescription())
                 .addOption(OptionType.STRING, "username", "The Minecraft username you wish to whitelist.");
     }
+
     @Override
     public void run(SlashCommandInteractionEvent event) {
 
         // Get options
-        String userId = event.getUser().getId();
+        long userId = event.getUser().getIdLong();
         OptionMapping option = event.getOption("username");
 
         if (option == null) {
@@ -40,23 +47,39 @@ public class WhitelistCommand extends ApplicationCommand {
 
         // Get usernames & uuid
         String username = option.getAsString();
-        UUID uuid = MojangUtil.getUserUUID(username);
+        MojangRequest mojangRequest = new MojangRequest();
 
-        if (uuid == null) {
-            event.getHook().sendMessage("No user exists").queue();
-            return;
+        try{
+            String uuid = mojangRequest.usernameToUUID(username);
+
+            if (uuid == null) {
+                event.getHook().sendMessage("No user exists").queue();
+                return;
+            }
+
+            System.out.println("User " + event.getUser().getGlobalName() + " executed /whitelist from Discord.");
+
+
+            int res = database.linkAccount(event.getUser(), uuid, username);
+            if (res == 1) {
+                database.unlinkAccount(uuid);
+                event.getHook().sendMessage("Deleted: `" + username + "`").queue();
+            } else { // Add name to whitelist
+
+                Bukkit.getScheduler().runTask(Bridge.getPlugin(), () -> Bukkit.getServer().dispatchCommand(
+                        Bukkit.getServer().getConsoleSender(),
+                        "whitelist add " + username
+                ));
+
+                event.getHook().sendMessage("Added: `" + username + "`").queue();
+                this.logger.info(String.format("User '%s' has registered their account '%s' to the whitelist",
+                        event.getUser().getName(), username));
+            }
+
         }
-
-        System.out.println("User " + event.getUser().getGlobalName() + " executed /whitelist from Discord.");
-
-        // Add name to whitelist
-        Bukkit.getScheduler().runTask(Bridge.getPlugin(), () -> Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "whitelist add " + username));
-
-        //////////////////////////////////////////////////////
-        // LOGIC TO REMOVE OLD NAME FROM WHITELIST!!!!!!!!!!!!
-        //////////////////////////////////////////////////////
-
-        event.getHook().sendMessage("```Added: " + username + "\nRemoved: ______```").queue();
-
+        catch (Exception e){
+            e.printStackTrace();
+            event.getHook().sendMessage("An unexpected error has occurred.").queue();
+        }
     }
 }
