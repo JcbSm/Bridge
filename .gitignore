@@ -2,6 +2,8 @@
 *.db
 *.db-journal
 
+lib/
+
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
