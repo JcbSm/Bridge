@@ -1,7 +1,6 @@
 package com.github.jcbsm.bridge;
 
 import com.github.jcbsm.bridge.exceptions.DatabaseNoResultException;
-import com.github.jcbsm.bridge.mojang.entities.Player;
 import net.dv8tion.jda.api.entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,12 +19,12 @@ public class DatabaseClient {
 
         try{
             Connection conn = this.connect();
-            logger.info("Connected to the database.");
+            this.logger.info("Connected to the database.");
             this.createTables();
 
             conn.close();
         }
-        catch (SQLException e){ logger.warn("SQL error: " + e.getMessage()); }
+        catch (SQLException e){ this.logger.warn("SQL error: " + e.getMessage()); }
     }
 
 
@@ -41,18 +40,18 @@ public class DatabaseClient {
 
     private void createTables(){
         String membersTable = """
-                CREATE TABLE "members" (
+                CREATE TABLE IF NOT EXISTS "members" (
                 \t"member_id"\tINTEGER NOT NULL UNIQUE,
                 \t"member_name"\tTEXT NOT NULL,
                 \t"member_linked"\tINTEGER NOT NULL DEFAULT 0,
                 \tPRIMARY KEY("member_id")
                 )""";
         String minecraftTable = """
-                CREATE TABLE "minecraft" (
+                CREATE TABLE IF NOT EXISTS "minecraft" (
                 \t"minecraft_uuid"\tTEXT NOT NULL UNIQUE,
                 \t"minecraft_name"\tTEXT NOT NULL UNIQUE,
                 \t"member_id"\tINTEGER NOT NULL,
-                \tPRIMARY KEY("minecraft_uuiid"),
+                \tPRIMARY KEY("minecraft_uuid"),
                 \tFOREIGN KEY("member_id") REFERENCES "members"("member_id") ON UPDATE CASCADE ON DELETE CASCADE
                 )""";
 
@@ -90,7 +89,7 @@ public class DatabaseClient {
     }
 
 
-    public void linkMember(User user, Player player) throws SQLException{
+    public void linkMember(User user, String uuid) throws SQLException{
         String sql = "INSERT INTO minecraft (`minecraft_uuid`, `minecraft_name`, `member_id`) VALUES (?, ?, ?);" +
                      "UPDATE members SET member_linked = 1 WHERE member_id = ?;";
 
@@ -99,7 +98,7 @@ public class DatabaseClient {
 
         try (Connection conn = this.connect();
              PreparedStatement stmt = conn.prepareStatement(sql)){
-            stmt.setString(1, player.getUUID().toString());
+            stmt.setString(1, uuid);
             stmt.setInt(2, 1);  // register as linked
             stmt.setLong(3, user.getIdLong());
             stmt.setLong(4, user.getIdLong());
