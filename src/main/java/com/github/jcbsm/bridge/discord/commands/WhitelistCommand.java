@@ -63,6 +63,10 @@ public class WhitelistCommand extends ApplicationCommand {
             int res = database.linkAccount(event.getUser(), uuid, username);
             if (res == 1) {
                 database.unlinkAccount(uuid);
+                Bukkit.getScheduler().runTask(Bridge.getPlugin(), () -> Bukkit.getServer().dispatchCommand(
+                        Bukkit.getServer().getConsoleSender(),
+                        "whitelist remove " + username
+                ));
                 event.getHook().sendMessage("Deleted: `" + username + "`").queue();
             } else { // Add name to whitelist
 
