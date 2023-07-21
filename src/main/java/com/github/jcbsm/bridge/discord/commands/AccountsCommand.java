@@ -91,7 +91,7 @@ public class AccountsCommand extends ApplicationCommand {
         String username = event.getOption("username").getAsString();
 
         try {
-            String uuid = new MojangRequest().usernameToUUID(username);
+            String uuid = MojangRequest.usernameToUUID(username);
 
             if (uuid == null) {
                 event.getHook().sendMessage("No minecraft account exists with this username.").queue();
@@ -143,7 +143,7 @@ public class AccountsCommand extends ApplicationCommand {
 
         try {
             // Get UUID
-            String uuid = new MojangRequest().usernameToUUID(username);
+            String uuid = MojangRequest.usernameToUUID(username);
 
             // If no UUID found.
             if (uuid == null) {

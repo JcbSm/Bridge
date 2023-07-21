@@ -177,7 +177,7 @@ public class DatabaseClient {
             while (rs.next()){
                 String uuid = rs.getString("MinecraftUUID");
 
-                String username = new MojangRequest().uuidToUsername(uuid);
+                String username = MojangRequest.uuidToUsername(uuid);
 
                 if (username == null) continue;
 
