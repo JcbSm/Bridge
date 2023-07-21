@@ -68,7 +68,6 @@ public class AccountsCommand extends ApplicationCommand {
         }
     }
 
-    // TODO: Whitelist shtuff
     public void run(SlashCommandInteractionEvent event) {
 
         event.deferReply().setEphemeral(true).queue();
