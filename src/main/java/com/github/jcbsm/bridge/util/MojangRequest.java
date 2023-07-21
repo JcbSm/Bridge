@@ -13,12 +13,13 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.UUID;
 
-public class MojangRequest{
+public class MojangRequest {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
     private final OkHttpClient httpClient = new OkHttpClient();
     private final Gson gson = new Gson();
 
-    private Map<String, Object> execute(String url) throws IOException{
+    private Map<String, Object> execute(String url) throws IOException {
 
         Request request = new Request.Builder().url(url).build();
         Call call = httpClient.newCall(request);
@@ -36,11 +37,18 @@ public class MojangRequest{
      * @throws IOException Unexpected results - i.e. no internet.
      */
     @Nullable
-    public String usernameToUUID(String username) throws IOException{
+    public String usernameToUUID(String username) throws IOException {
         Map<String, Object> response = this.execute(String.format("https://api.mojang.com/users/profiles/minecraft/%s", username));
-        System.out.println("Got uuid: " + response.get("id"));
-        if (response.containsKey("errorMessage")){ return null; }  // If error (no such player exists) return null
+
+        if (response.containsKey("errorMessage")) { return null; }  // If error (no such player exists) return null
         return (String) response.get("id");
     }
 
+    @Nullable
+    public String uuidToUsername(String uuid) throws IOException {
+        Map<String, Object> response = this.execute(String.format("https://api.mojang.com/user/profile/%s", uuid));
+
+        if (response.containsKey("errorMessage")) { return null; }
+        return (String) response.get("name");
+    }
 }
