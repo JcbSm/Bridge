@@ -2,6 +2,21 @@
 # From your application at discord.com/developers
 BotToken: "BOT_TOKEN_HERE"
 
+# Discord Application Commands
+ApplicationCommands:
+  Enabled: true
+
+# Account Linking configuration
+AccountLinking:
+  Enabled: true
+
+  # The maximum number of accounts a single discord user can link
+  MaxAccounts: 1
+
+  # If account linking should modify the whitelist
+  ModifiesWhitelist: true
+
+
 # Minecraft/Discord bidirectional chat relay
 ChatRelay:
   Enabled: true
