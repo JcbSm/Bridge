@@ -4,9 +4,6 @@ package com.github.jcbsm.bridge.discord;
 import com.github.jcbsm.bridge.Bridge;
 import com.github.jcbsm.bridge.exceptions.InvalidConfigException;
 import com.github.jcbsm.bridge.listeners.DiscordChatEventListener;
-import com.github.jcbsm.bridge.discord.ApplicationCommandHandler;
-import com.github.jcbsm.bridge.discord.commands.PlayerListCommand;
-import com.github.jcbsm.bridge.discord.commands.WhitelistCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -17,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
