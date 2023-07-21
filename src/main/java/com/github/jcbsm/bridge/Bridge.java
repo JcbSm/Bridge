@@ -42,7 +42,7 @@ public class Bridge extends JavaPlugin {
         logger.info("Starting Bridge...");
 
         // Load config
-        config = new ConfigHandler();
+        config = ConfigHandler.getHandler();
 
         // Check bot token has been set.
         if (config.isDefaultValue("BotToken")) {
