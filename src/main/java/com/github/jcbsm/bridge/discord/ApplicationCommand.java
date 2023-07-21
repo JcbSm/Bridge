@@ -14,17 +14,15 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class ApplicationCommand extends ListenerAdapter {
 
-    private final String name, description;
+    private final String name;
     private final Logger logger;
 
     /**
      * Creates an instance of an Application Command
      * @param name The name of the command
-     * @param description The description of the command
      */
-    public ApplicationCommand(String name, String description) {
+    public ApplicationCommand(String name) {
         this.name = name;
-        this.description = description;
         this.logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
     }
 
@@ -34,6 +32,7 @@ public abstract class ApplicationCommand extends ListenerAdapter {
      */
     @Override
     public void onSlashCommandInteraction (SlashCommandInteractionEvent event) {
+
         // If name matches, run the abstract method
         if (event.getName().equals(name)) {
             run(event);
@@ -48,13 +47,6 @@ public abstract class ApplicationCommand extends ListenerAdapter {
         return name;
     }
 
-    /**
-     * Get the command description
-     * @return Description
-     */
-    public String getDescription() {
-        return description;
-    }
 
     /**
      * Abstract method to be run on event emission

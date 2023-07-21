@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
 public class PingCommand extends ApplicationCommand {
 
-    public PingCommand() { super("ping", "me when debug"); }
+    public PingCommand() { super("ping"); }
 
     @Override
     public void run(SlashCommandInteractionEvent event) {
@@ -18,6 +18,6 @@ public class PingCommand extends ApplicationCommand {
 
     @Override
     public CommandData getCommandData() {
-        return Commands.slash(getName(), getDescription());
+        return Commands.slash(getName(), "Ping");
     }
 }

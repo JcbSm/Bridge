@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 public class PlayerListCommand extends ApplicationCommand {
 
     public PlayerListCommand() {
-        super("playerlist", "List the players online.");
+        super("playerlist");
     }
 
     /**
@@ -46,6 +46,6 @@ public class PlayerListCommand extends ApplicationCommand {
 
     @Override
     public CommandData getCommandData() {
-        return Commands.slash(getName(), getDescription());
+        return Commands.slash(getName(), "List online players");
     }
 }
