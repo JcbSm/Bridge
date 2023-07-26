@@ -1,5 +1,7 @@
 package com.github.jcbsm.bridge.util;
 
+import club.minnced.discord.webhook.send.WebhookMessage;
+import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import com.github.jcbsm.bridge.Bridge;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -76,7 +78,6 @@ public class MessageFormatHandler {
         str = replaceAll(str, displayName, ComponentUtil.getPlainText(event.getPlayer().displayName()));
 
         return str;
-
     }
 
     public static String playerChat(AsyncChatEvent event) {
@@ -89,6 +90,22 @@ public class MessageFormatHandler {
         str = replaceAll(str, world, event.getPlayer().getWorld().getName());
 
         return str;
+    }
+
+    public static WebhookMessage playerChatWebhook(AsyncChatEvent event) {
+
+        ConfigHandler configHandler = ConfigHandler.getHandler();
+
+        String content = replaceAll(playerEventPlaceholders(configHandler.getString("ChatRelay.WebhookMessages.ContentFormat"), event), message, ComponentUtil.getPlainText(event.message()));
+        String username = replaceAll(playerEventPlaceholders(configHandler.getString("ChatRelay.WebhookMessages.UsernameFormat"), event), message, ComponentUtil.getPlainText(event.message()));
+        String avatarURL = replaceAll(playerEventPlaceholders(configHandler.getString("ChatRelay.WebhookMessages.AvatarURL"), event), message, ComponentUtil.getPlainText(event.message()));
+
+        WebhookMessageBuilder builder = new WebhookMessageBuilder()
+                .setContent(content)
+                .setUsername(username)
+                .setAvatarUrl(avatarURL);
+
+        return builder.build();
     }
 
     public static String playerJoin(PlayerJoinEvent event) {
@@ -142,4 +159,5 @@ public class MessageFormatHandler {
     public static String serverClose() {
         return config.getString("MinecraftToDiscord.ServerEvents.Stop.Content");
     }
+
 }

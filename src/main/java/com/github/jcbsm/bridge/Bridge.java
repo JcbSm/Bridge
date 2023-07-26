@@ -1,5 +1,6 @@
 package com.github.jcbsm.bridge;
 
+import club.minnced.discord.webhook.send.WebhookMessage;
 import com.github.jcbsm.bridge.discord.BridgeDiscordClient;
 import com.github.jcbsm.bridge.listeners.*;
 import com.github.jcbsm.bridge.util.ConfigHandler;
@@ -21,20 +22,6 @@ public class Bridge extends JavaPlugin {
     private ConfigHandler config;
 
     private final Logger logger = LoggerFactory.getLogger(Bridge.class.getSimpleName());
-
-    /**
-     * The default config variables.
-     */
-    private final String defaultChanenlID = "000000000000000000", defaultToken = "BOT_TOKEN_HERE";
-    /**
-     * Discord Bot token
-     */
-    private String token;
-    /**
-     * Discord Channel IDs for the client.
-     */
-    private String chatChannelID;
-    private String consoleChannelID;
 
     @Override
     public void onEnable() {
@@ -101,16 +88,6 @@ public class Bridge extends JavaPlugin {
         return getPlugin(Bridge.class);
     }
 
-
-    // sanamorii: not needed if the database is a singleton pattern
-//    /**
-//     * Get the database
-//     * @return
-//     */
-//    public DatabaseClient getDB() { return db; }
-
-    public String getChatChannelID() { return chatChannelID; }
-
     /**
      * Broadcasts a minecraft chat message, replacing '&' with the colour char
      * @param message The message to send
@@ -127,4 +104,9 @@ public class Bridge extends JavaPlugin {
     public void broadcastDiscordChatMessage(String message) {
         discord.broadcastMessage(message);
     }
+
+    public void broadcastDiscordChatMessage(WebhookMessage message) {
+        discord.broadcastWebhookMessage(message);
+    }
+
 }

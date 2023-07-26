@@ -28,6 +28,27 @@ ChatRelay:
     ]
     Console: "000000000000000000"
 
+  # Whether to relay messages from different guilds
+  DiscordToDiscord:
+    Enabled: true
+
+  # The bot will send messages using webhooks, if disabled, will fall back to 'MessageFormat' below
+  #   %name%
+  #   %username%
+  #   %message%
+  WebhookMessages:
+    Enabled: true
+    # Username to use for minecraft chat messages
+    UsernameFormat: "%username%"
+    # Message format to use for minecraft chat messages
+    ContentFormat: "%message%"
+    # Whether to use linked discord account username
+    UsernameFromDiscord: false
+    # Whether to use linked discord account avatar
+    AvatarFromDiscord: false
+    # If not, URL to fetch avatar
+    AvatarURL: "https://mc-heads.net/avatar/%username%"
+
   # Messages Formatting
   MessageFormat:
 
