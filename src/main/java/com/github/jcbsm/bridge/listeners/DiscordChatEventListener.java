@@ -19,13 +19,14 @@ public class DiscordChatEventListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
 
-        // Ignore bots
+        // Ignore bots, Ensure chat relay is enabled and ignore non-relay channel messages
         if (event.getAuthor().isBot() || !ConfigHandler.getHandler().getBoolean("ChatRelay.Enabled") || !Bridge.getPlugin().getDiscord().getRelayChannels().containsKey(event.getChannel().getId()))
             return;
 
         // Broadcast to MC
         Bridge.getPlugin().broadcastMinecraftChatMessage(ChatRelayFormatter.discordToMinecraft(event));
 
+        // If D2D is enabled, broadcast the message
         if (ConfigHandler.getHandler().getBoolean("ChatRelay.DiscordToDiscord.Enabled")) {
             Bridge.getPlugin().broadcastDiscordChatMessage(event);
         }

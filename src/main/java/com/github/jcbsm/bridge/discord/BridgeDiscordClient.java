@@ -126,6 +126,10 @@ public class BridgeDiscordClient {
         hookCluster.multicast((client -> !hooks.get(Long.toString(client.getId())).getChannel().getId().equals(event.getChannel().getId())), builder.build());
     }
 
+    /**
+     * Broadcasts a message to all Chat relay channels
+     * @param message MessageData to send.
+     */
     public void broadcastMessage(MessageCreateData message) {
         // Send the message & queue
         for (TextChannel channel : relayChannels.values()) {

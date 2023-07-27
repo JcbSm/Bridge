@@ -46,6 +46,12 @@ public class MojangRequest {
         return (String) response.get("id");
     }
 
+    /**
+     * Gets the username of a UUID
+     * @param uuid UUID of the Minecraft user
+     * @return Username of the player
+     * @throws IOException
+     */
     @Nullable
     public static String uuidToUsername(String uuid) throws IOException {
         Map<String, Object> response = execute(String.format("https://api.mojang.com/user/profile/%s", uuid));

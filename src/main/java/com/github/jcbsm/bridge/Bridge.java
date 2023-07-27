@@ -92,6 +92,10 @@ public class Bridge extends JavaPlugin {
         return getPlugin(Bridge.class);
     }
 
+    /**
+     * Get the discord client
+     * @return The discord client
+     */
     public BridgeDiscordClient getDiscord() { return discord; }
 
     /**
@@ -104,21 +108,33 @@ public class Bridge extends JavaPlugin {
     }
 
     /**
-     * Broadcasts a discord message to the Chat channel
-     * @param message Message to send
+     * Broadcasts a string to all Discord chat relay channels
+     * @param content Message content to send
      */
-    public void broadcastDiscordChatMessage(String message) {
-        discord.broadcastMessage(message);
+    public void broadcastDiscordChatMessage(String content) {
+        discord.broadcastMessage(content);
     }
 
+    /**
+     * Broadcasts a Message to all Discord chat relay channels
+     * @param message Message to send
+     */
     public void broadcastDiscordChatMessage(MessageCreateData message) {
         discord.broadcastMessage(message);
     }
 
+    /**
+     * Broadcasts a Webhook message to all Discord chat relay channels
+     * @param message Webhook message to send
+     */
     public void broadcastDiscordChatMessage(WebhookMessage message) {
         discord.broadcastMessage(message);
     }
 
+    /**
+     * Broadcasts a Discord message to all other Discord chat relay channels
+     * @param event The message event to broadcast
+     */
     public void broadcastDiscordChatMessage(MessageReceivedEvent event) {
         discord.broadcastMessage(event);
     }
