@@ -92,6 +92,8 @@ public class Bridge extends JavaPlugin {
         return getPlugin(Bridge.class);
     }
 
+    public BridgeDiscordClient getDiscord() { return discord; }
+
     /**
      * Broadcasts a minecraft chat message, replacing '&' with the colour char
      * @param message The message to send

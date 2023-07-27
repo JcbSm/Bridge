@@ -20,7 +20,7 @@ public class DiscordChatEventListener extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
 
         // Ignore bots
-        if (event.getAuthor().isBot() || !ConfigHandler.getHandler().getBoolean("ChatRelay.Enabled"))
+        if (event.getAuthor().isBot() || !ConfigHandler.getHandler().getBoolean("ChatRelay.Enabled") || !Bridge.getPlugin().getDiscord().getRelayChannels().containsKey(event.getChannel().getId()))
             return;
 
         // Broadcast to MC
