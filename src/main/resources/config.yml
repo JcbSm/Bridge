@@ -77,38 +77,95 @@ ChatRelay:
         # Available placeholders:
         #   %message%   The message content
         #   %world%     The world the message was sent from
-        Chat: "**%username% >** %message%"
+        Chat:
+          Content: "**%username% >** %message%"
+          Embed:
+            Enabled: false
+            Title: ""
+            Description: ""
+            Color: ""
+            Author: ""
+            Footer: ""
+            IconURL: ""
 
         # Death - A player death
         # Available placeholders:
         #   %message%   The death message (includes username)
         #   %world%     The world the player died in
-        Death: "## :skull: ***%message%***"
+        Death:
+          Content: "## :skull: ***%message%***"
+          Embed:
+            Enabled: false
+            Title: ""
+            Description: ""
+            Color: ""
+            Author: ""
+            Footer: ""
+            IconURL: ""
 
         # Join - A player joining the server
         # Available placeholders:
         #   %message%   The join message
-        Join: "## *%username% joined the server*"
+        Join:
+          Content: "## *%username% joined the server*"
+          Embed:
+            Enabled: false
+            Title: ""
+            Description: ""
+            Color: ""
+            Author: ""
+            Footer: ""
+            IconURL: ""
 
         # Leave - A player leaving the server
         # Available placeholders:
         #   %message%   The leave message
-        Leave: "## *%username% left the server*"
+        Leave:
+          Content: "## *%username% left the server*"
+          Embed:
+            Enabled: false
+            Title: ""
+            Description: ""
+            Color: ""
+            Author: ""
+            Footer: ""
+            IconURL: ""
 
         # Advancement - A player earning an advancement
         # Available placeholders:
         #   %title%         The advancement title
-        Advancement: "## :trophy: %username% earned an advancement! *%title%*"
+        Advancement:
+          Content: "## :trophy: %username% earned an advancement! *%title%*"
+          Embed:
+            Enabled: false
+            Title: ""
+            Description: ""
+            Color: ""
+            Author: ""
+            Footer: ""
+            IconURL: ""
 
       # Server Events
       ServerEvents:
 
         Startup:
-          Content: "# :white_check_mark: Server has started!"
+          Content: ""
           Embed:
-            Enabled: false
+            Enabled: true
+            Title: "Server has started."
+            Description: ""
+            Color: "#21CF35"
+            Author: ""
+            Footer: ""
+            IconURL: ""
 
         Stop:
-          Content: "# :octagonal_sign: Server has stopped."
+          Content: ""
           Embed:
-            Enabled: false
+            Enabled: true
+            Title: "Server has stopped."
+            Description: ""
+            Color: "#CF2721"
+            Author: ""
+            Footer: ""
+            IconURL: ""
