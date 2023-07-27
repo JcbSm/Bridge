@@ -163,12 +163,22 @@ public class AccountsCommand extends ApplicationCommand {
                             Bukkit.getServer().getConsoleSender(),
                             "whitelist remove " + username
                     ));
+
+                    Bukkit.getScheduler().runTask(Bridge.getPlugin(), () -> {
+                        try {
+                            Bukkit.getServer().dispatchCommand(
+                                    Bukkit.getServer().getConsoleSender(),
+                                    "kick " + username + " This account has been unlinked."
+                            );
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
                 }
 
                 event.getHook().sendMessage("Successfully unlinked \"" + username + "\"").queue();
             } else {
                 event.getHook().sendMessage("You are not currently linked to the Minecraft account \"" + username + "\"").queue();
-                return;
             }
 
 

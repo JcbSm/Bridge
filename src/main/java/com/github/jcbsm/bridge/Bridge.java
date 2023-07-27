@@ -3,8 +3,12 @@ package com.github.jcbsm.bridge;
 import club.minnced.discord.webhook.send.WebhookMessage;
 import com.github.jcbsm.bridge.discord.BridgeDiscordClient;
 import com.github.jcbsm.bridge.listeners.*;
+import com.github.jcbsm.bridge.util.ChatRelayFormatter;
 import com.github.jcbsm.bridge.util.ConfigHandler;
 import com.github.jcbsm.bridge.util.MessageFormatHandler;
+import io.papermc.paper.event.player.AsyncChatEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -64,7 +68,7 @@ public class Bridge extends JavaPlugin {
             //getServer().getPluginManager().registerEvents(new PlayerAdvancementDoneEventListener(), this);
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(this, () ->
-                broadcastDiscordChatMessage(MessageFormatHandler.serverLoad())
+                broadcastDiscordChatMessage(ChatRelayFormatter.serverStartup())
             );
         }
 
@@ -77,7 +81,7 @@ public class Bridge extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        broadcastDiscordChatMessage(MessageFormatHandler.serverClose());
+        broadcastDiscordChatMessage(ChatRelayFormatter.serverStop());
     }
 
     /**
@@ -105,8 +109,16 @@ public class Bridge extends JavaPlugin {
         discord.broadcastMessage(message);
     }
 
+    public void broadcastDiscordChatMessage(MessageCreateData message) {
+        discord.broadcastMessage(message);
+    }
+
     public void broadcastDiscordChatMessage(WebhookMessage message) {
-        discord.broadcastWebhookMessage(message);
+        discord.broadcastMessage(message);
+    }
+
+    public void broadcastDiscordChatMessage(MessageReceivedEvent event) {
+        discord.broadcastMessage(event);
     }
 
 }

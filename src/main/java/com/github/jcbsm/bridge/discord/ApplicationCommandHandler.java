@@ -58,7 +58,7 @@ public class ApplicationCommandHandler {
      */
     public void overwriteApplicationCommands(ArrayList<ApplicationCommand> commands) {
         // Retrieve global commands, delete all to ensure no wrong commands
-        client.getJDA().retrieveCommands().queue((commandList) -> {
+        client.getJda().retrieveCommands().queue((commandList) -> {
 
             // Delete each one
             for (Command command: commandList) {
@@ -68,7 +68,7 @@ public class ApplicationCommandHandler {
         });
 
         // For each guild
-        for (Guild guild : client.getJDA().getGuilds()) {
+        for (Guild guild : client.getJda().getGuilds()) {
 
             guild.retrieveCommands().queue((commandList -> {
 
@@ -93,7 +93,7 @@ public class ApplicationCommandHandler {
 
         // Add listeners
         for (ApplicationCommand command : commands) {
-            client.getJDA().addEventListener(command);
+            client.getJda().addEventListener(command);
         }
     }
 }

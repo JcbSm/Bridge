@@ -43,9 +43,9 @@ ChatRelay:
     # Message format to use for minecraft chat messages
     ContentFormat: "%message%"
     # Whether to use linked discord account username
-    UsernameFromDiscord: false
+    #UsernameFromDiscord: false
     # Whether to use linked discord account avatar
-    AvatarFromDiscord: false
+    #AvatarFromDiscord: false
     # If not, URL to fetch avatar
     AvatarURL: "https://mc-heads.net/avatar/%username%"
 
@@ -62,7 +62,7 @@ ChatRelay:
       #   %message%   The message content
       #   %channel%   The channel the message was sent from
       #   %guild%     The name of the server the message was sent from
-      Chat: "[Discord] %username% > %message%"
+      Chat: "&9&l[Discord | %guild%]&r %username% > &7%message%"
 
     # Minecraft -> Discord
     MinecraftToDiscord:
@@ -83,89 +83,117 @@ ChatRelay:
             Enabled: false
             Title: ""
             Description: ""
-            Color: ""
-            Author: ""
-            Footer: ""
-            IconURL: ""
+            Color: "#000000"
+            Author:
+              Name: ""
+              IconURL: ""
+            Footer:
+              Text: ""
+              IconURL: ""
+            ThumbnailURL: ""
 
         # Death - A player death
         # Available placeholders:
         #   %message%   The death message (includes username)
         #   %world%     The world the player died in
         Death:
-          Content: "## :skull: ***%message%***"
+          Content: "## :skull: %message%"
           Embed:
             Enabled: false
             Title: ""
             Description: ""
-            Color: ""
-            Author: ""
-            Footer: ""
-            IconURL: ""
+            Color: "#000000"
+            Author:
+              Name: ""
+              IconURL: ""
+            Footer:
+              Text: ""
+              IconURL: ""
+            ThumbnailURL: ""
 
         # Join - A player joining the server
         # Available placeholders:
         #   %message%   The join message
         Join:
-          Content: "## *%username% joined the server*"
+          Content: ""
           Embed:
-            Enabled: false
+            Enabled: true
             Title: ""
             Description: ""
-            Color: ""
-            Author: ""
-            Footer: ""
-            IconURL: ""
+            Color: "#00FF00"
+            Author:
+              Name: "%username% joined the server"
+              IconURL: "https://mc-heads.net/avatar/%username%"
+            Footer:
+              Text: ""
+              IconURL: ""
+            ThumbnailURL: ""
 
         # Leave - A player leaving the server
         # Available placeholders:
         #   %message%   The leave message
         Leave:
-          Content: "## *%username% left the server*"
+          Content: ""
           Embed:
-            Enabled: false
+            Enabled: true
             Title: ""
             Description: ""
-            Color: ""
-            Author: ""
-            Footer: ""
-            IconURL: ""
+            Color: "#FF0000"
+            Author:
+              Name: "%username% left the server"
+              IconURL: "https://mc-heads.net/avatar/%username%"
+            Footer:
+              Text: ""
+              IconURL: ""
+            ThumbnailURL: ""
 
         # Advancement - A player earning an advancement
         # Available placeholders:
         #   %title%         The advancement title
         Advancement:
-          Content: "## :trophy: %username% earned an advancement! *%title%*"
+          Content: ""
           Embed:
-            Enabled: false
+            Enabled: true
             Title: ""
-            Description: ""
-            Color: ""
-            Author: ""
-            Footer: ""
-            IconURL: ""
+            Description: "%title%"
+            Color: "#0000FF"
+            Author:
+              Name: "Made an advancement"
+              IconURL: ""
+            Footer:
+              Text: ""
+              IconURL: ""
+            ThumbnailURL: ""
 
       # Server Events
       ServerEvents:
 
         Startup:
-          Content: ""
+          Content: "# :white_check_mark: Server has started."
           Embed:
-            Enabled: true
-            Title: "Server has started."
+            Enabled: false
+            Title: ""
             Description: ""
-            Color: "#21CF35"
-            Author: ""
-            Footer: ""
-            IconURL: ""
+            Color: "#000000"
+            Author:
+              Name: ""
+              IconURL: ""
+            Footer:
+              Text: ""
+              IconURL: ""
+            ThumbnailURL: ""
 
         Stop:
-          Content: ""
+          Content: "# :octagonal_sign: Server has stopped."
           Embed:
-            Enabled: true
-            Title: "Server has stopped."
+            Enabled: false
+            Title: ""
             Description: ""
-            Color: "#CF2721"
-            Author: ""
-            Footer: ""
-            IconURL: ""
+            Color: "#000000"
+            Author:
+              Name: ""
+              IconURL: ""
+            Footer:
+              Text: ""
+              IconURL: ""
+            ThumbnailURL: ""

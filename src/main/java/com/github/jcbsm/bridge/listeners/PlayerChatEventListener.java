@@ -1,6 +1,7 @@
 package com.github.jcbsm.bridge.listeners;
 
 import com.github.jcbsm.bridge.Bridge;
+import com.github.jcbsm.bridge.util.ChatRelayFormatter;
 import com.github.jcbsm.bridge.util.ConfigHandler;
 import com.github.jcbsm.bridge.util.MessageFormatHandler;
 import io.papermc.paper.event.player.AsyncChatEvent;
@@ -19,7 +20,10 @@ public class PlayerChatEventListener implements Listener {
     public void onAsyncPlayerChat(AsyncChatEvent event) {
 
         if (ConfigHandler.getHandler().getBoolean("ChatRelay.WebhookMessages.Enabled")) {
-            Bridge.getPlugin().broadcastDiscordChatMessage(MessageFormatHandler.playerChatWebhook(event));
-        } else Bridge.getPlugin().broadcastDiscordChatMessage(MessageFormatHandler.playerChat(event));
+
+            Bridge.getPlugin().broadcastDiscordChatMessage(ChatRelayFormatter.playerChatWebhook(event));
+        } else {
+            Bridge.getPlugin().broadcastDiscordChatMessage(ChatRelayFormatter.playerChat(event));
+        }
     }
 }
