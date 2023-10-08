@@ -19,6 +19,8 @@ public class PlayerChatEventListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onAsyncPlayerChat(AsyncChatEvent event) {
 
+        if (event.isCancelled()) return;
+
         if (ConfigHandler.getHandler().getBoolean("ChatRelay.WebhookMessages.Enabled")) {
 
             Bridge.getPlugin().broadcastDiscordChatMessage(ChatRelayFormatter.playerChatWebhook(event));
