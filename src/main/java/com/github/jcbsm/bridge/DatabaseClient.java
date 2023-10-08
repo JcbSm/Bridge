@@ -36,7 +36,7 @@ public class DatabaseClient {
         return client;
     }
 
-    private Connection connect() throws SQLException{
+    private Connection connect() throws SQLException {
         String connString = String.format("jdbc:sqlite:%s\\database.db", plugin.getDataFolder().getPath());
         return DriverManager.getConnection(connString);
     }

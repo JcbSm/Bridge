@@ -31,6 +31,8 @@ ChatRelay:
   # Whether to relay messages from different guilds
   DiscordToDiscord:
     Enabled: true
+    ShowServerProfile: true
+
 
   # The bot will send messages using webhooks, if disabled, will fall back to 'MessageFormat' below
   #   %name%
