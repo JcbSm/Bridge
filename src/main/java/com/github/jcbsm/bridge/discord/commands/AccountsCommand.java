@@ -99,7 +99,7 @@ public class AccountsCommand extends ApplicationCommand {
             }
 
             // Ensure not exceeding max accounts.
-            if (database.countLinkedAccounts(event.getUser()) > ConfigHandler.getHandler().getInt("AccountsLinking.MaxAccounts")) {
+            if (database.countLinkedAccounts(event.getUser()) >= ConfigHandler.getHandler().getInt("AccountLinking.MaxAccounts")) {
                 event.getHook().sendMessage("You already have the maximum number of allowed linked accounts. Please remove one before attempting to link any others.").queue();
                 return;
             }
