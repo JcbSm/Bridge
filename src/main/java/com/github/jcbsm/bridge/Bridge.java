@@ -65,7 +65,7 @@ public class Bridge extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new PlayerDeathEventListener(), this);
             getServer().getPluginManager().registerEvents(new PlayerJoinEventListener(), this);
             getServer().getPluginManager().registerEvents(new PlayerLeaveEventListener(), this);
-            //getServer().getPluginManager().registerEvents(new PlayerAdvancementDoneEventListener(), this);
+            getServer().getPluginManager().registerEvents(new PlayerAdvancementDoneEventListener(), this);
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(this, () ->
                 broadcastDiscordChatMessage(ChatRelayFormatter.serverStartup())

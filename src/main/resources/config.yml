@@ -152,16 +152,17 @@ ChatRelay:
         # Advancement - A player earning an advancement
         # Available placeholders:
         #   %title%         The advancement title
+        #   %description%   The advancement description
         Advancement:
-          Content: ""
+          Content: "### :trophy: %username% has made the advancement ***%title%*** \n- %description%"
           Embed:
-            Enabled: true
+            Enabled: false
             Title: ""
             Description: "%title%"
-            Color: "#0000FF"
+            Color: "#FF00FF"
             Author:
-              Name: "Made an advancement"
-              IconURL: ""
+              Name: "%username% made an advancement"
+              IconURL: "https://mc-heads.net/avatar/%username%"
             Footer:
               Text: ""
               IconURL: ""

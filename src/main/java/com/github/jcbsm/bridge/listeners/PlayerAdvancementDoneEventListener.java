@@ -12,6 +12,7 @@ public class PlayerAdvancementDoneEventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerAdvancementDoneEvent(PlayerAdvancementDoneEvent event) {
-        Bridge.getPlugin().broadcastDiscordChatMessage(ChatRelayFormatter.playerAdvancement(event));
+        if (event.getAdvancement().getDisplay() != null && event.getAdvancement().getDisplay().doesAnnounceToChat())
+            Bridge.getPlugin().broadcastDiscordChatMessage(ChatRelayFormatter.playerAdvancement(event));
     }
 }

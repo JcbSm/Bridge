@@ -38,7 +38,8 @@ public class ChatRelayFormatter {
             channel = escapeRegex + "%channel%",
             guild = escapeRegex + "%guild%",
             world = escapeRegex +"%world%",
-            advancementTitle = escapeRegex + "%title%";
+            advancementTitle = escapeRegex + "%title%",
+            advancementDesc = escapeRegex + "%description%";
 
     /**
      * Replaces all instances matching a regex pattern with a replacement string
@@ -204,7 +205,8 @@ public class ChatRelayFormatter {
     // TODO: Implement this.
     private static String playerAdvancementPlaceholders(String input, PlayerAdvancementDoneEvent event) {
         return replaceAll(minecraftPlayerEventPlaceholders(input, event), Map.of(
-                advancementTitle, "Not yet implemented."
+                advancementTitle, ComponentUtil.getPlainText(event.getAdvancement().getDisplay().title()),
+                advancementDesc, ComponentUtil.getPlainText((event.getAdvancement().getDisplay().description()))
         ));
     }
 
