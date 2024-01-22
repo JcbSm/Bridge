@@ -9,23 +9,33 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ObjectInputFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+// TODO: sanamorii - Should this not be a singleton?
 public class ConfigHandler {
 
+    private static final ConfigHandler handler = new ConfigHandler();
     private final Map<String, Object> cache = new HashMap<>();
+    private final Bridge plugin;
     private final FileConfiguration config;
     private final Configuration defaults;
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
-    public ConfigHandler() {
-        config = Bridge.getPlugin().getConfig();
+    private ConfigHandler() {
+        plugin = Bridge.getPlugin();
+        config = plugin.getConfig();
         defaults = config.getDefaults();
+
+        // Save default config
+        plugin.saveDefaultConfig();
     }
+
+    public static ConfigHandler getHandler() { return handler; }
 
     /**
      * Get an object from the cache
@@ -47,6 +57,16 @@ public class ConfigHandler {
     public Object get(@NotNull String path, Object def) {
         Object result = cache.computeIfAbsent(path, p -> config.get(p));
         return (result == null) ? def : result;
+    }
+
+    public int getInt(@NotNull String path) {
+        Object def = defaults.get(path);
+        return getInt(path, (def instanceof Number) ? def : 0);
+    }
+
+    public int getInt(@NotNull String path, Object def) {
+        Object val = get(path, def);
+        return (val instanceof Number) ? (int) val : 0;
     }
 
     /**

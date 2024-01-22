@@ -1,4 +1,7 @@
 # Bridge
+<center>
+<img src="/assets/logo.png"></img>
+</center>
 Bridge is a plugin for PaperMC that includes features to help make a Minecraft server for your discord community a much better and smoother experience.
 
 ## Features

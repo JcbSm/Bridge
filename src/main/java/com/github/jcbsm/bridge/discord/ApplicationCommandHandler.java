@@ -1,13 +1,16 @@
 package com.github.jcbsm.bridge.discord;
 
 import com.github.jcbsm.bridge.discord.commands.PlayerListCommand;
-import com.github.jcbsm.bridge.discord.commands.WhitelistCommand;
+import com.github.jcbsm.bridge.discord.commands.AccountsCommand;
+import com.github.jcbsm.bridge.util.ConfigHandler;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Handles interactions and registers application commands
@@ -21,10 +24,17 @@ public class ApplicationCommandHandler {
 
         this.client = client;
 
-        overwriteApplicationCommands(
-                new PlayerListCommand(),
-                new WhitelistCommand()
-        );
+        ArrayList<ApplicationCommand> activeCommands = new ArrayList<>();
+
+        if (ConfigHandler.getHandler().getBoolean("ApplicationCommands.Enabled")) {
+            activeCommands.add(new PlayerListCommand());
+
+            if (ConfigHandler.getHandler().getBoolean("AccountLinking.Enabled")) {
+                activeCommands.add(new AccountsCommand());
+            }
+        }
+
+        overwriteApplicationCommands(activeCommands);
 
     }
 
@@ -46,9 +56,9 @@ public class ApplicationCommandHandler {
      * Updates the existing ones.
      * @param commands
      */
-    public void overwriteApplicationCommands(ApplicationCommand... commands) {
+    public void overwriteApplicationCommands(ArrayList<ApplicationCommand> commands) {
         // Retrieve global commands, delete all to ensure no wrong commands
-        client.getJDA().retrieveCommands().queue((commandList) -> {
+        client.getJda().retrieveCommands().queue((commandList) -> {
 
             // Delete each one
             for (Command command: commandList) {
@@ -58,7 +68,7 @@ public class ApplicationCommandHandler {
         });
 
         // For each guild
-        for (Guild guild : client.getJDA().getGuilds()) {
+        for (Guild guild : client.getJda().getGuilds()) {
 
             guild.retrieveCommands().queue((commandList -> {
 
@@ -66,7 +76,7 @@ public class ApplicationCommandHandler {
                 for (Command command: commandList) {
 
                     // Ignore it's in the current ones
-                    if (Arrays.stream(commands).anyMatch(cmd -> cmd.getName().equals(command.getName())))
+                    if (commands.stream().anyMatch(cmd -> cmd.getName().equals(command.getName())))
                         continue;
 
                     // Otherwise, delet it
@@ -83,7 +93,7 @@ public class ApplicationCommandHandler {
 
         // Add listeners
         for (ApplicationCommand command : commands) {
-            client.getJDA().addEventListener(command);
+            client.getJda().addEventListener(command);
         }
     }
 }

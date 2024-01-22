@@ -1,6 +1,7 @@
 package com.github.jcbsm.bridge.listeners;
 
 import com.github.jcbsm.bridge.Bridge;
+import com.github.jcbsm.bridge.util.ChatRelayFormatter;
 import com.github.jcbsm.bridge.util.MessageFormatHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,6 +12,6 @@ public class PlayerJoinEventListener implements Listener {
 
     @EventHandler (priority = EventPriority.MONITOR)
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
-        Bridge.getPlugin().broadcastDiscordChatMessage(MessageFormatHandler.playerJoin(event));
+        Bridge.getPlugin().broadcastDiscordChatMessage(ChatRelayFormatter.playerJoin(event));
     }
 }

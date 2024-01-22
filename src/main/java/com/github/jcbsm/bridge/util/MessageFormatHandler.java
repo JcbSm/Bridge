@@ -1,18 +1,22 @@
 package com.github.jcbsm.bridge.util;
 
+import club.minnced.discord.webhook.send.WebhookMessage;
+import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import com.github.jcbsm.bridge.Bridge;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.kyori.adventure.text.TextComponent;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 
 import java.util.regex.Pattern;
 
+@Deprecated
 public class MessageFormatHandler {
 
-    private final static ConfigurationSection config = Bridge.getPlugin().getConfig().getConfigurationSection("ChatRelay.MessageFormat");
+    private final static ConfigHandler config = ConfigHandler.getHandler();
 
     private final static String
         escapeRegex = "(?<!\\\\)",
@@ -20,6 +24,7 @@ public class MessageFormatHandler {
         displayName = escapeRegex + "%name%",
         message = escapeRegex + "%message%",
         channel = escapeRegex + "%channel%",
+        guild = escapeRegex + "%guild%",
         world = escapeRegex +"%world%",
         advancementTitle = escapeRegex + "%title%";
 
@@ -43,11 +48,13 @@ public class MessageFormatHandler {
     public static String discordMessage(MessageReceivedEvent event) {
 
         // Get config string
-        String str = config.getString("DiscordToMinecraft.Chat");
+        String str = config.getString("ChatRelay.MessageFormat.DiscordToMinecraft.Chat");
 
         // Replace all %username%s
         str = replaceAll(str, username, event.getAuthor().getGlobalName());
         str = replaceAll(str, message, event.getMessage().getContentStripped());
+        str = replaceAll(str, channel, event.getChannel().getName());
+        str = replaceAll(str, guild, event.getGuild().getName());
 
         return str;
 
@@ -56,7 +63,7 @@ public class MessageFormatHandler {
     public static String playerDeath(PlayerDeathEvent event) {
 
         // Get config string
-        String str = config.getString("MinecraftToDiscord.PlayerEvents.Death");
+        String str = config.getString("ChatRelay.MessageFormat.MinecraftToDiscord.PlayerEvents.Death");
 
         str = replaceAll(str, username, event.getEntity().getName());
         str = replaceAll(str, displayName, ComponentUtil.getPlainText(event.getEntity().displayName()));
@@ -73,12 +80,11 @@ public class MessageFormatHandler {
         str = replaceAll(str, displayName, ComponentUtil.getPlainText(event.getPlayer().displayName()));
 
         return str;
-
     }
 
     public static String playerChat(AsyncChatEvent event) {
 
-        String str = config.getString("MinecraftToDiscord.PlayerEvents.Chat");
+        String str = config.getString("ChatRelay.MessageFormat.MinecraftToDiscord.PlayerEvents.Chat");
 
         str = playerEventPlaceholders(str, event);
 
@@ -88,9 +94,24 @@ public class MessageFormatHandler {
         return str;
     }
 
+    public static WebhookMessage playerChatWebhook(AsyncChatEvent event) {
+
+
+        String content = replaceAll(playerEventPlaceholders(config.getString("ChatRelay.WebhookMessages.ContentFormat"), event), message, ComponentUtil.getPlainText(event.message()));
+        String username = replaceAll(playerEventPlaceholders(config.getString("ChatRelay.WebhookMessages.UsernameFormat"), event), message, ComponentUtil.getPlainText(event.message()));
+        String avatarURL = replaceAll(playerEventPlaceholders(config.getString("ChatRelay.WebhookMessages.AvatarURL"), event), message, ComponentUtil.getPlainText(event.message()));
+
+        WebhookMessageBuilder builder = new WebhookMessageBuilder()
+                .setContent(content)
+                .setUsername(username)
+                .setAvatarUrl(avatarURL);
+
+        return builder.build();
+    }
+
     public static String playerJoin(PlayerJoinEvent event) {
 
-        String str = config.getString("MinecraftToDiscord.PlayerEvents.Join");
+        String str = config.getString("ChatRelay.MessageFormat.MinecraftToDiscord.PlayerEvents.Join");
 
         str = playerEventPlaceholders(str, event);
 
@@ -102,7 +123,7 @@ public class MessageFormatHandler {
 
     public static String playerLeave(PlayerQuitEvent event) {
 
-        String str = config.getString("MinecraftToDiscord.PlayerEvents.Leave");
+        String str = config.getString("ChatRelay.MessageFormat.MinecraftToDiscord.PlayerEvents.Leave");
 
         str = playerEventPlaceholders(str, event);
         str = replaceAll(str, message, ComponentUtil.getPlainText(event.quitMessage()));
@@ -113,7 +134,7 @@ public class MessageFormatHandler {
 
     public static String playerKick(PlayerKickEvent event) {
 
-        String str = config.getString("MinecraftToDiscord.PlayerEvents.Leave");
+        String str = config.getString("ChatRelay.MessageFormat.MinecraftToDiscord.PlayerEvents.Leave");
 
         str = playerEventPlaceholders(str, event);
         str = replaceAll(str, message, ComponentUtil.getPlainText(event.leaveMessage()));
@@ -124,7 +145,7 @@ public class MessageFormatHandler {
 
     public static String playerAdvancement(PlayerAdvancementDoneEvent event) {
 
-        String str = config.getString("MinecraftToDiscord.PlayerEvents.Advancement");
+        String str = config.getString("ChatRelay.MessageFormat.MinecraftToDiscord.PlayerEvents.Advancement");
 
         str = playerEventPlaceholders(str, event);
         str = replaceAll(str, advancementTitle, ComponentUtil.getPlainText(event.getAdvancement().displayName()));
@@ -133,10 +154,25 @@ public class MessageFormatHandler {
     }
 
     public static String serverLoad() {
-        return config.getString("MinecraftToDiscord.ServerEvents.Startup.Content");
+        return config.getString("ChatRelay.MessageFormat.MinecraftToDiscord.ServerEvents.Startup.Content");
     }
 
     public static String serverClose() {
-        return config.getString("MinecraftToDiscord.ServerEvents.Stop.Content");
+        return config.getString("ChatRelay.MessageFormat.MinecraftToDiscord.ServerEvents.Stop.Content");
+    }
+
+    public static MessageCreateData createMessage(AsyncChatEvent event) {
+
+        MessageCreateBuilder builder = new MessageCreateBuilder();
+
+        String rawContent = config.getString("ChatRelay.MessageFormat.MinecraftToDiscord.PlayerEvents.Chat.Content");
+        boolean embed = config.getBoolean("ChatRelay.MessageFormat.MinecraftToDiscord.PlayerEvents.Chat.Embed.Enabled");
+
+        if (embed) {
+
+        }
+
+        return builder.build();
+
     }
 }

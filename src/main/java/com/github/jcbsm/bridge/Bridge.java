@@ -1,16 +1,16 @@
 package com.github.jcbsm.bridge;
 
+import club.minnced.discord.webhook.send.WebhookMessage;
 import com.github.jcbsm.bridge.discord.BridgeDiscordClient;
 import com.github.jcbsm.bridge.listeners.*;
+import com.github.jcbsm.bridge.util.ChatRelayFormatter;
 import com.github.jcbsm.bridge.util.ConfigHandler;
 import com.github.jcbsm.bridge.util.MessageFormatHandler;
-import com.github.jcbsm.bridge.database.IDatabaseClient;
-import net.kyori.adventure.text.Component;
+import io.papermc.paper.event.player.AsyncChatEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import org.slf4j.Logger;
@@ -22,24 +22,10 @@ public class Bridge extends JavaPlugin {
      * Plugin variables, clients, util etc
      */
     private BridgeDiscordClient discord;
-    private IDatabaseClient db;
+    private DatabaseClient db;
     private ConfigHandler config;
 
     private final Logger logger = LoggerFactory.getLogger(Bridge.class.getSimpleName());
-
-    /**
-     * The default config variables.
-     */
-    private final String defaultChanenlID = "000000000000000000", defaultToken = "BOT_TOKEN_HERE";
-    /**
-     * Discord Bot token
-     */
-    private String token;
-    /**
-     * Discord Channel IDs for the client.
-     */
-    private String chatChannelID;
-    private String consoleChannelID;
 
     @Override
     public void onEnable() {
@@ -47,7 +33,7 @@ public class Bridge extends JavaPlugin {
         logger.info("Starting Bridge...");
 
         // Load config
-        config = new ConfigHandler();
+        config = ConfigHandler.getHandler();
 
         // Check bot token has been set.
         if (config.isDefaultValue("BotToken")) {
@@ -70,8 +56,6 @@ public class Bridge extends JavaPlugin {
             return;
         }
 
-        // Create db
-
         // Register Bukkit event listeners
         logger.info("Registering bukkit listeners...");
 
@@ -84,9 +68,12 @@ public class Bridge extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new PlayerAdvancementDoneEventListener(), this);
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(this, () ->
-                broadcastDiscordChatMessage(MessageFormatHandler.serverLoad())
+                broadcastDiscordChatMessage(ChatRelayFormatter.serverStartup())
             );
         }
+
+        // sanamorii: initialise database.
+        this.db = DatabaseClient.getDatabase();
 
         // End of enable stdout.
         logger.info("Done.");
@@ -94,7 +81,7 @@ public class Bridge extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        broadcastDiscordChatMessage(MessageFormatHandler.serverClose());
+        broadcastDiscordChatMessage(ChatRelayFormatter.serverStop());
     }
 
     /**
@@ -106,12 +93,10 @@ public class Bridge extends JavaPlugin {
     }
 
     /**
-     * Get the database
-     * @return
+     * Get the discord client
+     * @return The discord client
      */
-    public IDatabaseClient getDB() { return db; }
-
-    public String getChatChannelID() { return chatChannelID; }
+    public BridgeDiscordClient getDiscord() { return discord; }
 
     /**
      * Broadcasts a minecraft chat message, replacing '&' with the colour char
@@ -123,10 +108,35 @@ public class Bridge extends JavaPlugin {
     }
 
     /**
-     * Broadcasts a discord message to the Chat channel
+     * Broadcasts a string to all Discord chat relay channels
+     * @param content Message content to send
+     */
+    public void broadcastDiscordChatMessage(String content) {
+        discord.broadcastMessage(content);
+    }
+
+    /**
+     * Broadcasts a Message to all Discord chat relay channels
      * @param message Message to send
      */
-    public void broadcastDiscordChatMessage(String message) {
+    public void broadcastDiscordChatMessage(MessageCreateData message) {
         discord.broadcastMessage(message);
     }
+
+    /**
+     * Broadcasts a Webhook message to all Discord chat relay channels
+     * @param message Webhook message to send
+     */
+    public void broadcastDiscordChatMessage(WebhookMessage message) {
+        discord.broadcastMessage(message);
+    }
+
+    /**
+     * Broadcasts a Discord message to all other Discord chat relay channels
+     * @param event The message event to broadcast
+     */
+    public void broadcastDiscordChatMessage(MessageReceivedEvent event) {
+        discord.broadcastMessage(event);
+    }
+
 }

@@ -2,6 +2,21 @@
 # From your application at discord.com/developers
 BotToken: "BOT_TOKEN_HERE"
 
+# Discord Application Commands
+ApplicationCommands:
+  Enabled: true
+
+# Account Linking configuration
+AccountLinking:
+  Enabled: true
+
+  # The maximum number of accounts a single discord user can link
+  MaxAccounts: 1
+
+  # If account linking should modify the whitelist
+  ModifiesWhitelist: true
+
+
 # Minecraft/Discord bidirectional chat relay
 ChatRelay:
   Enabled: true
@@ -12,6 +27,29 @@ ChatRelay:
       "000000000000000000"
     ]
     Console: "000000000000000000"
+
+  # Whether to relay messages from different guilds
+  DiscordToDiscord:
+    Enabled: true
+    ShowServerProfile: true
+
+
+  # The bot will send messages using webhooks, if disabled, will fall back to 'MessageFormat' below
+  #   %name%
+  #   %username%
+  #   %message%
+  WebhookMessages:
+    Enabled: true
+    # Username to use for minecraft chat messages
+    UsernameFormat: "%username%"
+    # Message format to use for minecraft chat messages
+    ContentFormat: "%message%"
+    # Whether to use linked discord account username
+    #UsernameFromDiscord: false
+    # Whether to use linked discord account avatar
+    #AvatarFromDiscord: false
+    # If not, URL to fetch avatar
+    AvatarURL: "https://mc-heads.net/avatar/%username%"
 
   # Messages Formatting
   MessageFormat:
@@ -25,7 +63,8 @@ ChatRelay:
       #   %username%  Discord users username
       #   %message%   The message content
       #   %channel%   The channel the message was sent from
-      Chat: "[Discord] %username% > %message%"
+      #   %guild%     The name of the server the message was sent from
+      Chat: "&9&l[Discord | %guild%]&r %username% > &7%message%"
 
     # Minecraft -> Discord
     MinecraftToDiscord:
@@ -40,38 +79,124 @@ ChatRelay:
         # Available placeholders:
         #   %message%   The message content
         #   %world%     The world the message was sent from
-        Chat: "**%username% >** %message%"
+        Chat:
+          Content: "**%username% >** %message%"
+          Embed:
+            Enabled: false
+            Title: ""
+            Description: ""
+            Color: "#000000"
+            Author:
+              Name: ""
+              IconURL: ""
+            Footer:
+              Text: ""
+              IconURL: ""
+            ThumbnailURL: ""
 
         # Death - A player death
         # Available placeholders:
         #   %message%   The death message (includes username)
         #   %world%     The world the player died in
-        Death: "## :skull: ***%message%***"
+        Death:
+          Content: "## :skull: %message%"
+          Embed:
+            Enabled: false
+            Title: ""
+            Description: ""
+            Color: "#000000"
+            Author:
+              Name: ""
+              IconURL: ""
+            Footer:
+              Text: ""
+              IconURL: ""
+            ThumbnailURL: ""
 
         # Join - A player joining the server
         # Available placeholders:
         #   %message%   The join message
-        Join: "## *%username% joined the server*"
+        Join:
+          Content: ""
+          Embed:
+            Enabled: true
+            Title: ""
+            Description: ""
+            Color: "#00FF00"
+            Author:
+              Name: "%username% joined the server"
+              IconURL: "https://mc-heads.net/avatar/%username%"
+            Footer:
+              Text: ""
+              IconURL: ""
+            ThumbnailURL: ""
 
         # Leave - A player leaving the server
         # Available placeholders:
         #   %message%   The leave message
-        Leave: "## *%username% left the server*"
+        Leave:
+          Content: ""
+          Embed:
+            Enabled: true
+            Title: ""
+            Description: ""
+            Color: "#FF0000"
+            Author:
+              Name: "%username% left the server"
+              IconURL: "https://mc-heads.net/avatar/%username%"
+            Footer:
+              Text: ""
+              IconURL: ""
+            ThumbnailURL: ""
 
         # Advancement - A player earning an advancement
         # Available placeholders:
         #   %title%         The advancement title
-        Advancement: "## :trophy: %username% earned an advancement! *%title%*"
+        #   %description%   The advancement description
+        Advancement:
+          Content: "### :trophy: %username% has made the advancement ***%title%*** \n- %description%"
+          Embed:
+            Enabled: false
+            Title: ""
+            Description: "%title%"
+            Color: "#FF00FF"
+            Author:
+              Name: "%username% made an advancement"
+              IconURL: "https://mc-heads.net/avatar/%username%"
+            Footer:
+              Text: ""
+              IconURL: ""
+            ThumbnailURL: ""
 
       # Server Events
       ServerEvents:
 
         Startup:
-          Content: "# :white_check_mark: Server has started!"
+          Content: "# :white_check_mark: Server has started."
           Embed:
             Enabled: false
+            Title: ""
+            Description: ""
+            Color: "#000000"
+            Author:
+              Name: ""
+              IconURL: ""
+            Footer:
+              Text: ""
+              IconURL: ""
+            ThumbnailURL: ""
 
         Stop:
           Content: "# :octagonal_sign: Server has stopped."
           Embed:
             Enabled: false
+            Title: ""
+            Description: ""
+            Color: "#000000"
+            Author:
+              Name: ""
+              IconURL: ""
+            Footer:
+              Text: ""
+              IconURL: ""
+            ThumbnailURL: ""
