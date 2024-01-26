@@ -1,10 +1,11 @@
 plugins {
-    id 'java'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id "java"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "de.undercouch.download" version "5.5.0"
 }
 
 group 'github.jcbsm'
-version '1.0.0'
+version '1.1'
 
 repositories {
     mavenCentral()
@@ -50,7 +51,10 @@ tasks {
         mustRunAfter("build")
 
 
-        test {
+    }
+}
+
+test {
     useJUnitPlatform()
 }
 
@@ -80,27 +84,35 @@ processResources {
     }
 }
 
+tasks.register('downloadServerJar') {
+    group 'server'
+    download.run {
+        src 'https://api.papermc.io/v2/projects/paper/versions/1.20.4/builds/399/downloads/paper-1.20.4-399.jar'
+        dest project.property("testSrvDir") + "server.jar"
+        onlyIfModified true
+    }
+}
+
 tasks.register('copyJar') {
     group 'server'
     dependsOn 'shadowJar'
     doLast {
         copy {
             from 'build/libs/' + rootProject.name + '-' + project.version + '.jar'
-            into 'testsrv/plugins'
+            into project.property("testSrvDir") + "plugins"
         }
     }
 }
 
 tasks.register('run') {
     group 'server'
-    dependsOn 'copyJar'
+    dependsOn 'copyJar', 'downloadServerJar'
     doLast {
         exec {
-            workingDir "${projectDir}/testsrv/"
+            workingDir "${projectDir}" + project.property("testSrvDir")
             commandLine 'java', '-jar', 'server.jar', '-nogui'
         }
     }
-}}
 }
 
 compileJava.options.compilerArgs = ['-Xlint:unchecked', '-Xlint:deprecation']

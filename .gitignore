@@ -50,7 +50,6 @@ bin/
 
 ### Test Server ###
 /testsrv/*
-!/testsrv/server.jar
 !/testsrv/eula.txt
 
 ### Logo ###
