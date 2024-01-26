@@ -1,0 +1,2 @@
+# Contributing to Bridge
+[ WIP ]
