@@ -36,7 +36,21 @@ dependencies {
     compileOnly "io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT"
 }
 
-test {
+tasks {
+
+    jar {
+        finalizedBy("shadowJar")
+        archiveFileName.set(project.name + "-" + archiveVersion.get() + "-original.jar")
+    }
+
+    shadowJar {
+        archiveFileName.set(project.name + "-" + archiveVersion.get() + ".jar")
+        archiveClassifier.set("shaded")
+
+        mustRunAfter("build")
+
+
+        test {
     useJUnitPlatform()
 }
 
@@ -56,6 +70,7 @@ jar {
     }
 }
 
+
 processResources {
     def props = [version: version]
     inputs.properties props
@@ -65,11 +80,7 @@ processResources {
     }
 }
 
-shadowJar {
-    archiveClassifier = ''
-}
-
-tasks.register('jarIntoServer') {
+tasks.register('copyJar') {
     group 'server'
     dependsOn 'shadowJar'
     doLast {
@@ -80,19 +91,16 @@ tasks.register('jarIntoServer') {
     }
 }
 
-tasks.register('runServer') {
+tasks.register('run') {
     group 'server'
+    dependsOn 'copyJar'
     doLast {
         exec {
             workingDir "${projectDir}/testsrv/"
             commandLine 'java', '-jar', 'server.jar', '-nogui'
         }
     }
-}
-
-tasks.register('buildRunServer') {
-    group 'server'
-    dependsOn 'jarIntoServer', 'runServer'
+}}
 }
 
 compileJava.options.compilerArgs = ['-Xlint:unchecked', '-Xlint:deprecation']

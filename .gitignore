@@ -49,7 +49,9 @@ bin/
 .DS_Store
 
 ### Test Server ###
-/testsrv/
+/testsrv/*
+!/testsrv/server.jar
+!/testsrv/eula.txt
 
 ### Logo ###
 *.xcf
