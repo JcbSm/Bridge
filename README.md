@@ -6,7 +6,7 @@ Bridge is a plugin for PaperMC that includes features to help make a Minecraft s
 
 ## Features
 ### Message Broadcasts
-- Two-way Minecraft to Discord message broadcasting
+- Bidirectional Minecraft to Discord message broadcasting
   - Fully customizable
   - Embed & webhook support
 - Events broadcasting
