@@ -110,6 +110,7 @@ public class Bridge extends JavaPlugin {
     /**
      * Broadcasts a string to all Discord chat relay channels
      * @param content Message content to send
+     * @deprecated use alternative method calls
      */
     public void broadcastDiscordChatMessage(String content) {
         discord.broadcastMessage(content);
