@@ -20,6 +20,6 @@ Inside the `/testsrv/` directory, there should be a file called `server.jar`. If
 Now that you have a `server.jar`, you can run the tasks `server > run` which will run the Minecraft server.
 
 The plugin will not load initially, as it has not been configured in `/testsrv/plugins/Bridge/config.yml`
-A guide on how to set up `config.yml` can be found [here]().
+A guide on how to set up `config.yml` can be found [here](./configuration.md).
 
 - The `run` task will automatically run all prerequisite tasks beforehand, so there is no need to run `shadowJar`, `copyJar` or `downloadServerJar`.
