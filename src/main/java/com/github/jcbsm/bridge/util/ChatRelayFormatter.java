@@ -88,7 +88,7 @@ public class ChatRelayFormatter {
 
         // Initiate message builder with content
         MessageCreateBuilder builder = new MessageCreateBuilder()
-                .setContent(placeholders.apply(path + "Content"));
+                .setContent(parseMentions(placeholders.apply(path + "Content")));
 
         // If embed is enabled, build it.
         if (ConfigHandler.getHandler().getBoolean(path + "Embed.Enabled")) {
@@ -101,7 +101,7 @@ public class ChatRelayFormatter {
                     embedBuilder.setTitle(title);
 
             // Same for description
-            String description = placeholders.apply(path + "Embed.Description");
+            String description = parseMentions(placeholders.apply(path + "Embed.Description"));
             if (!description.isEmpty())
                     embedBuilder.setDescription(description);
 
