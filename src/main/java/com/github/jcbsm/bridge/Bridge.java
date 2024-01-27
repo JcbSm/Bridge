@@ -112,6 +112,7 @@ public class Bridge extends JavaPlugin {
      * @param content Message content to send
      * @deprecated use alternative method calls
      */
+    @Deprecated
     public void broadcastDiscordChatMessage(String content) {
         discord.broadcastMessage(content);
     }
