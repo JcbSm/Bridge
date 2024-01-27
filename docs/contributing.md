@@ -27,9 +27,15 @@ Clone the newly made fork.
 Make a new branch based on the branch you wish to contribute to.
 
 ## Make your changes
-Do ya thing
+- Make changes to the code. It is important to thoroughly document your code and follow the conventions present.
+- For a guide on how to properly test the plugin using the build tools provided, see [this guide](./testing.md).
 
 ## Submit a Pull Request
+1. Head to https://github.com/JcbSm/Bridge/pulls
+2. Click "New Pull Request" and "Compare across forks"
+3. Choose your fork and branch, and the branch on `JcbSm/Bridge` to merge into.
+4. Add any useful/additional information & wait for approval :)
+
 Ensure the target branch on JcbSm/Bridge is the correct one.
 
 ## A few things...
