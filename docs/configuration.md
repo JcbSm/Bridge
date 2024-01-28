@@ -3,8 +3,9 @@
 
 0. Make a [discord application](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot) (don't worry about installing node/discord.js), make note of the **token**, you'll need this later.
 1. [Add your bot to your server(s)](https://discordjs.guide/preparations/adding-your-bot-to-servers.html).
-   1. Choose the scopes `bot` and `application.commands`
+   1. Choose the scopes `bot` and `applications.commands`
    2. Select the permissions
+       - Manage Webhooks
        - Send Messages
        - Send Messages in Threads
        - Embed Links
