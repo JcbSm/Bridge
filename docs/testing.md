@@ -25,3 +25,4 @@ The task `shadow > shadowJar` is used to compile the plugin. It will be output t
 > - The `run` task will automatically run all prerequisite tasks beforehand, so there is no need to run `shadowJar`, `copyJar`, or `downloadServerJar`.
 
 3. Modify `/testsrv/plugins/Bridge/config.yml` according to [this guide](./configuration.md).
+4. Connect to the server using `localhost` as the server IP.
