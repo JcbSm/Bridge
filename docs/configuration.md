@@ -1,7 +1,7 @@
 # A Guide to `config.yml`
 ### Prerequisites
 
-0. Make a [discord application](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot), make note of the **token**.
+0. Make a [discord application](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot) (don't worry about installing node/discord.js), make note of the **token**, you'll need this later.
 0. [Add your bot to your server(s)](https://discordjs.guide/preparations/adding-your-bot-to-servers.html).
 
 ---
