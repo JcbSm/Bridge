@@ -14,6 +14,7 @@ The task `shadow > shadowJar` is used to compile the plugin. It will be output t
 
 ### Setting up a Minecraft Server
 1. Inside the `/testsrv/` directory, there should be a file called `server.jar`. If not, run the task `server > downloadServerJar`
+   - If this still does not work. Download the latest version of [paper](https://papermc.io/downloads/paper) and place that file in `/testsrv/`, and rename it to `server.jar`
 
 ![image](https://github.com/JcbSm/Bridge/assets/49797894/0495fd77-80a6-451a-aedf-d39282469d2f)
 
