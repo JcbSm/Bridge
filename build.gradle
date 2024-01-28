@@ -109,7 +109,7 @@ tasks.register('run') {
     dependsOn 'copyJar', 'downloadServerJar'
     doLast {
         exec {
-            workingDir "${projectDir}" + project.property("testSrvDir")
+            workingDir "${projectDir}" + "/" + project.property("testSrvDir")
             commandLine 'java', '-jar', 'server.jar', '-nogui'
         }
     }
