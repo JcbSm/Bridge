@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
@@ -322,6 +323,7 @@ public class ChatRelayFormatter {
      * @return String with all mentions formatted correctly for Discord.
      */
     public static String parseMentions(String message){
+
         ArrayList<String> usernames = new ArrayList<>();
 
         // Compile regex pattern for an @ followed by 2-32 word characters
@@ -334,20 +336,27 @@ public class ChatRelayFormatter {
             usernames.add(matcher.group(1));
         }
 
-        for(int i = 0; i < usernames.size(); i++){
+        // Iterate through usernames
+        for (String username : usernames) {
             try {
-                String uuid = MojangRequest.usernameToUUID(usernames.get(i));
 
+                // Do nothing if player is online
+                if (Bukkit.getServer().getPlayerExact(username) != null) continue;
+
+                // Get UUID
+                String uuid = MojangRequest.usernameToUUID(username);
+
+                // Search for player in Database
                 Long discordUser = DatabaseClient.getDatabase().getLinked(uuid);
 
+                // If the user is not found in the database, do not mention
                 if (discordUser == null) continue;
 
-                message = replaceAll(message, "@" + usernames.get(i), "<@" + discordUser + ">");
+                // Replace usernames with mentions
+                message = replaceAll(message, "@" + username, "<@" + discordUser + ">");
 
 
-            } catch(IOException e) {
-                e.printStackTrace();
-            } catch (SQLException e) {
+            } catch (IOException | SQLException e) {
                 throw new RuntimeException(e);
             }
         }
