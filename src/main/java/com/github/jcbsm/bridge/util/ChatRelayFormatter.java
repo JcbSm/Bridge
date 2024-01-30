@@ -337,7 +337,10 @@ public class ChatRelayFormatter {
         for(int i = 0; i < usernames.size(); i++){
             try {
                 String uuid = MojangRequest.usernameToUUID(usernames.get(i));
+
                 Long discordUser = DatabaseClient.getDatabase().getLinked(uuid);
+
+                if (discordUser == null) continue;
 
                 message = replaceAll(message, "@" + usernames.get(i), "<@" + discordUser + ">");
 
