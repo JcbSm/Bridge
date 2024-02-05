@@ -99,7 +99,7 @@ public class Bridge extends JavaPlugin {
     public BridgeDiscordClient getDiscord() { return discord; }
 
     /**
-     * Broadcasts a minecraft chat message, replacing '&' with the colour char
+     * Broadcasts a minecraft chat message, replacing ampersand with the colour char
      * @param message The message to send
      */
     public void broadcastMinecraftChatMessage(String message) {
