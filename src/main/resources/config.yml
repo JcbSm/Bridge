@@ -33,6 +33,9 @@ ChatRelay:
     Enabled: true
     ShowServerProfile: true
 
+  #Noise to player on mention in minecraft
+  NoiseToMinecraft:
+    Enabled: true
 
   # The bot will send messages using webhooks, if disabled, will fall back to 'MessageFormat' below
   #   %name%
