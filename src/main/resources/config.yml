@@ -33,7 +33,7 @@ ChatRelay:
     Enabled: true
     ShowServerProfile: true
 
-  #Noise to player on mention in minecraft
+  # Noise to player on mention in minecraft
   NoiseToMinecraft:
     Enabled: true
 

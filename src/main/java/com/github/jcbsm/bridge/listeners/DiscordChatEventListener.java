@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
 import java.util.Objects;
@@ -60,7 +61,7 @@ public class DiscordChatEventListener extends ListenerAdapter {
         while (matcher.find()) {
             for(Player player : Bukkit.getOnlinePlayers()){
                 if(Objects.equals(player.getName(),matcher.group(1))){
-                    player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_CHIME,10,1);
+                    player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.VOICE, (float) 10.0, (float) 0.5);
                     player.spawnParticle(Particle.SMALL_FLAME,player.getLocation().toHighestLocation(),50);
                 }
             }
