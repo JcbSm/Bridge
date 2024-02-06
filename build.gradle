@@ -1,10 +1,11 @@
 plugins {
-    id 'java'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id "java"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "de.undercouch.download" version "5.5.0"
 }
 
 group 'github.jcbsm'
-version '1.0.0'
+version '1.1'
 
 repositories {
     mavenCentral()
@@ -32,8 +33,26 @@ dependencies {
     implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
     implementation 'club.minnced:discord-webhooks:0.8.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testImplementation 'io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     compileOnly "io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT"
+}
+
+tasks {
+
+    jar {
+        finalizedBy("shadowJar")
+        archiveFileName.set(project.name + "-" + archiveVersion.get() + "-original.jar")
+    }
+
+    shadowJar {
+        archiveFileName.set(project.name + "-" + archiveVersion.get() + ".jar")
+        archiveClassifier.set("shaded")
+
+        mustRunAfter("build")
+
+
+    }
 }
 
 test {
@@ -56,6 +75,7 @@ jar {
     }
 }
 
+
 processResources {
     def props = [version: version]
     inputs.properties props
@@ -65,34 +85,35 @@ processResources {
     }
 }
 
-shadowJar {
-    archiveClassifier = ''
+tasks.register('downloadServerJar') {
+    group 'server'
+    download.run {
+        src 'https://api.papermc.io/v2/projects/paper/versions/1.20.4/builds/399/downloads/paper-1.20.4-399.jar'
+        dest project.property("testSrvDir") + "server.jar"
+        onlyIfModified true
+    }
 }
 
-tasks.register('jarIntoServer') {
+tasks.register('copyJar') {
     group 'server'
     dependsOn 'shadowJar'
     doLast {
         copy {
             from 'build/libs/' + rootProject.name + '-' + project.version + '.jar'
-            into 'testsrv/plugins'
+            into project.property("testSrvDir") + "plugins"
         }
     }
 }
 
-tasks.register('runServer') {
+tasks.register('run') {
     group 'server'
+    dependsOn 'copyJar', 'downloadServerJar'
     doLast {
         exec {
-            workingDir "${projectDir}/testsrv/"
+            workingDir "${projectDir}" + "/" + project.property("testSrvDir")
             commandLine 'java', '-jar', 'server.jar', '-nogui'
         }
     }
-}
-
-tasks.register('buildRunServer') {
-    group 'server'
-    dependsOn 'jarIntoServer', 'runServer'
 }
 
 compileJava.options.compilerArgs = ['-Xlint:unchecked', '-Xlint:deprecation']
