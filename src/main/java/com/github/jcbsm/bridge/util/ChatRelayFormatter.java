@@ -4,9 +4,11 @@ import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import club.minnced.discord.webhook.send.WebhookMessage;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
+import com.github.jcbsm.bridge.DatabaseClient;
 import com.github.jcbsm.bridge.listeners.PlayerDeathEventListener;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
@@ -15,9 +17,13 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 
 import java.awt.*;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ChatRelayFormatter {
@@ -82,7 +88,7 @@ public class ChatRelayFormatter {
 
         // Initiate message builder with content
         MessageCreateBuilder builder = new MessageCreateBuilder()
-                .setContent(placeholders.apply(path + "Content"));
+                .setContent(parseMentions(placeholders.apply(path + "Content")));
 
         // If embed is enabled, build it.
         if (ConfigHandler.getHandler().getBoolean(path + "Embed.Enabled")) {
@@ -95,7 +101,7 @@ public class ChatRelayFormatter {
                     embedBuilder.setTitle(title);
 
             // Same for description
-            String description = placeholders.apply(path + "Embed.Description");
+            String description = parseMentions(placeholders.apply(path + "Embed.Description"));
             if (!description.isEmpty())
                     embedBuilder.setDescription(description);
 
@@ -301,11 +307,48 @@ public class ChatRelayFormatter {
      * @return The message to be broadcast
      */
     public static WebhookMessage playerChatWebhook(AsyncChatEvent event) {
+        String content = playerChatPlaceholders(ConfigHandler.getHandler().getString("ChatRelay.WebhookMessages.ContentFormat"), event);
 
         return new WebhookMessageBuilder()
-                .setContent(playerChatPlaceholders(ConfigHandler.getHandler().getString("ChatRelay.WebhookMessages.ContentFormat"), event))
+                .setContent(parseMentions(content))
                 .setUsername(playerChatPlaceholders(ConfigHandler.getHandler().getString("ChatRelay.WebhookMessages.UsernameFormat"), event))
                 .setAvatarUrl(playerChatPlaceholders(ConfigHandler.getHandler().getString("ChatRelay.WebhookMessages.AvatarURL"), event))
                 .build();
+    }
+
+    /**
+     * Searches a string
+     * @param message String to be searched
+     * @return String with all mentions formatted correctly for Discord.
+     */
+    public static String parseMentions(String message){
+        ArrayList<String> usernames = new ArrayList<>();
+
+        // Compile regex pattern for an @ followed by 2-32 word characters
+        Pattern regex = Pattern.compile("@(\\w{2,32})");
+        Matcher matcher = regex.matcher(message);
+
+        // Finds all the sequences of characters that follow the @ symbol
+        // 1 takes the second group - ignores @ symbol
+        while (matcher.find()) {
+            usernames.add(matcher.group(1));
+        }
+
+        for(int i = 0; i < usernames.size(); i++){
+            try {
+                String uuid = MojangRequest.usernameToUUID(usernames.get(i));
+                Long discordUser = DatabaseClient.getDatabase().getLinked(uuid);
+
+                message = replaceAll(message, "@" + usernames.get(i), "<@" + discordUser + ">");
+
+
+            } catch(IOException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return message;
     }
 }

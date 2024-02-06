@@ -33,6 +33,7 @@ dependencies {
     implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
     implementation 'club.minnced:discord-webhooks:0.8.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testImplementation 'io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     compileOnly "io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT"
 }
@@ -109,7 +110,7 @@ tasks.register('run') {
     dependsOn 'copyJar', 'downloadServerJar'
     doLast {
         exec {
-            workingDir "${projectDir}" + project.property("testSrvDir")
+            workingDir "${projectDir}" + "/" + project.property("testSrvDir")
             commandLine 'java', '-jar', 'server.jar', '-nogui'
         }
     }
