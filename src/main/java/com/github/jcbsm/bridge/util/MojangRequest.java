@@ -54,7 +54,7 @@ public class MojangRequest {
      */
     @Nullable
     public static String uuidToUsername(String uuid) throws IOException {
-        Map<String, Object> response = execute(String.format("https://api.mojang.com/user/profile/%s", uuid));
+        Map<String, Object> response = execute(String.format("https://sessionserver.mojang.com/session/minecraft/profile/%s", uuid));
 
         if (response.containsKey("errorMessage")) { return null; }
         return (String) response.get("name");
