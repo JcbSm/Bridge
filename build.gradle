@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'github.jcbsm'
-version '1.1'
+version '1.2'
 
 repositories {
     mavenCentral()
@@ -33,9 +33,9 @@ dependencies {
     implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
     implementation 'club.minnced:discord-webhooks:0.8.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testImplementation 'io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT'
+//    testImplementation 'io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    compileOnly "io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT"
+    compileOnly "io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT"
 }
 
 tasks {
@@ -59,14 +59,8 @@ test {
     useJUnitPlatform()
 }
 
-def targetJavaVersion = 17
 java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 jar {
@@ -88,7 +82,7 @@ processResources {
 tasks.register('downloadServerJar') {
     group 'server'
     download.run {
-        src 'https://api.papermc.io/v2/projects/paper/versions/1.20.4/builds/399/downloads/paper-1.20.4-399.jar'
+        src 'https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/41/downloads/paper-1.21.1-41.jar'
         dest project.property("testSrvDir") + "server.jar"
         onlyIfModified true
     }
