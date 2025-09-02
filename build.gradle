@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'github.jcbsm'
-version '1.2'
+version '2.0'
 
 repositories {
     mavenCentral()
@@ -35,7 +35,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
 //    testImplementation 'io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    compileOnly "io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT"
+    compileOnly "io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT"
 }
 
 tasks {
@@ -82,7 +82,7 @@ processResources {
 tasks.register('downloadServerJar') {
     group 'server'
     download.run {
-        src 'https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/41/downloads/paper-1.21.1-41.jar'
+        src 'https://api.papermc.io/v2/projects/paper/versions/1.21.8/builds/56/downloads/paper-1.21.8-56.jar'
         dest project.property("testSrvDir") + "server.jar"
         onlyIfModified true
     }
