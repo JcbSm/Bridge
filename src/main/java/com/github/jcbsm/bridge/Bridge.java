@@ -99,7 +99,7 @@ public class Bridge extends JavaPlugin {
     public BridgeDiscordClient getDiscord() { return discord; }
 
     /**
-     * Broadcasts a minecraft chat message, replacing '&' with the colour char
+     * Broadcasts a minecraft chat message, replacing ampersand with the colour char
      * @param message The message to send
      */
     public void broadcastMinecraftChatMessage(String message) {
@@ -110,7 +110,9 @@ public class Bridge extends JavaPlugin {
     /**
      * Broadcasts a string to all Discord chat relay channels
      * @param content Message content to send
+     * @deprecated use alternative method calls
      */
+    @Deprecated
     public void broadcastDiscordChatMessage(String content) {
         discord.broadcastMessage(content);
     }

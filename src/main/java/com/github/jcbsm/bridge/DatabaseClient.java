@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class DatabaseClient {
     }
 
     private Connection connect() throws SQLException {
-        String connString = String.format("jdbc:sqlite:%s\\database.db", plugin.getDataFolder().getPath());
+        String connString = String.format("jdbc:sqlite:%s%sdatabase.db", plugin.getDataFolder().getPath(), File.separator);
         return DriverManager.getConnection(connString);
     }
 
